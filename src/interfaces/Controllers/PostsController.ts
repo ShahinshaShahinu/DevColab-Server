@@ -144,8 +144,10 @@ export const HomePosts = async (req: Request, res: Response) => {
 
         const HomePosts = await GetHomePosts(postRepository)();
 
+        
 
-        res.json(HomePosts)
+        if (HomePosts)  res.json(HomePosts)
+    
     } catch (error) {
 
     }
@@ -155,8 +157,8 @@ export const EditUSerPost = async (req: Request, res: Response) => {
     try {
 
         const PostId = req?.params?.PostId
-        const { Taitle, previewContent, cloudImgUrl, HashTag ,uploadedVideoUrls} = req.body
-        const updated = await UpdateUserPost(postRepository)(PostId, Taitle, previewContent, cloudImgUrl, HashTag ,uploadedVideoUrls);
+        const { Taitle, previewContent, cloudImgUrl, HashTag, uploadedVideoUrls } = req.body
+        const updated = await UpdateUserPost(postRepository)(PostId, Taitle, previewContent, cloudImgUrl, HashTag, uploadedVideoUrls);
 
         if (updated) {
 
