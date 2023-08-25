@@ -14,6 +14,7 @@ export type PostRepository = {
   create: (post: Posts) => Promise<Posts>,
   findPosts: (userId: string) => Promise<Posts[] | null | undefined>,
   find: () => Promise<Posts[]>,
+
   DeletePost: (PostId: string) => Promise<object | null | undefined>,
   UpdatePost: (PostId: string, title: string, content: string, image: string, HashTag: string[] ,uploadedVideoUrls:string[]) => Promise<UpdateWriteOpResult | undefined>
   UpdatePostLike: (PostId: string, userId: string) => Promise<string | string | undefined>
@@ -79,6 +80,9 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
       throw error;
     }
   };
+
+
+
 
 
   const UpdatePost = async (PostId: string, title: string, content: string, image: string, HashTag: string[] ,uploadedVideoUrls:string[]) => {

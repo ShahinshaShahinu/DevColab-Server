@@ -128,7 +128,7 @@ export const BlockReportedPost = async (req: Request, res: Response) => {
         
         const objectPostId = new ObjectId(PostId)
         const BlockPost = await ReportPostStatus(ReportRepository)(objectPostId,false);
-        console.log(BlockPost,'blocke false');
+
         
         
     } catch (error) {
@@ -143,7 +143,7 @@ export const UnBlockReportedPost = async (req: Request, res: Response) => {
         
         const objectPostId = new ObjectId(PostId)
         const UnblockPost = await ReportPostStatus(ReportRepository)(objectPostId,true)
-        console.log(UnblockPost,'UnblockPost true');
+
         
     } catch (error) {
         console.log(error,'BlockRepportedPOst err');

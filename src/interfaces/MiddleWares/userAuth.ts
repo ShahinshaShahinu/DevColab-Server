@@ -24,7 +24,6 @@ interface DecodedToken {
             const decoded = jwt.verify(token as string, process.env.JWT_ACTOKEN as Secret, { algorithms: ['HS256'] }) as DecodedToken;
             console.log('Decoded Token:', decoded);
 
-           
         }
 
         next();
@@ -39,7 +38,7 @@ export const getUserIdFromJWT = (request: Request): any => {
          const token = request.headers.accesstoken as string;
          if (token) {
             const decodedToken = jwt.verify(token as string, process.env.JWT_ACTOKEN as Secret, { algorithms: ['HS256'] }) as DecodedToken;
-            console.log(decodedToken,'ddd');
+
             
             const userId = decodedToken?.sub;
             return userId;

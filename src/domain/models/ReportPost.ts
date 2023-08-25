@@ -29,6 +29,7 @@ export  interface ReportPostData {
         userId?:{
             profileImg:string;
             UserName:string
+            _id?:string | undefined
         }
     }
     status?:Boolean

@@ -48,7 +48,7 @@ export const GetUserPost = async (req: Request, res: Response) => {
 
     try {
 
-        const userId = req.params.userId;
+        const userId = req.params?.userId;
 
         const UserPosts = await getPostinfo(postRepository)(userId)
 
@@ -144,14 +144,15 @@ export const HomePosts = async (req: Request, res: Response) => {
 
         const HomePosts = await GetHomePosts(postRepository)();
 
-        
+        if (HomePosts) res.json(HomePosts)
 
-        if (HomePosts)  res.json(HomePosts)
-    
     } catch (error) {
-
+        console.log(error, 'HomePosts');
     }
 }
+
+
+
 
 export const EditUSerPost = async (req: Request, res: Response) => {
     try {
@@ -256,3 +257,5 @@ export const DeleteVideo = async (req: Request, res: Response) => {
 
     }
 }
+
+

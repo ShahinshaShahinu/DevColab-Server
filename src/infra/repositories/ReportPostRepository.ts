@@ -64,7 +64,6 @@ export const ReportPostRepositoryImpl = (ReportPostsModel: MongoDB_ReportPost): 
     
 
     const UpdatePostStatus = async (PostId:ObjectId,status:boolean):Promise<boolean | object> => {
-        console.log("hrerer",status,PostId);
         const updated = await PostModel.updateOne({_id:PostId},{$set:{status:status}})
         return updated
     }

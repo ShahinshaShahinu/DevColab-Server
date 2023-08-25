@@ -30,6 +30,9 @@ import { ReportPostModel } from "../../infra/database/ReportPostModel";
 import { InsertReportPost } from "../../app/ReportPost/SaveReportPost";
 import { ObjectId } from "mongodb";
 import { GetUserAllHashtag } from '../../app/user/updateUser';
+import { CreateNotification, DeleteUserNotification, UpdateReadNotification, findNotification } from "../../app/NotifiactionSend/NotifiCation";
+import { NotificationModel } from '../../infra/database/NotificationModel';
+import { NotificationRepositoryImpl } from "../../infra/repositories/NotificationRepository";
 
 
 const db = userModel; // Instantiate MongoDB connection
@@ -37,7 +40,7 @@ const db = userModel; // Instantiate MongoDB connection
 const userRepository = UserRepositoryImpl(db);
 const postRepository = PostRepositoryImpl(PostModel);
 const ReportRepository = ReportPostRepositoryImpl(ReportPostModel);
-
+const NotifyRepository = NotificationRepositoryImpl(NotificationModel);
 export const Signup = async (req: Request, res: Response) => {
   try {
     const { UserName, email, password, isGoogle, profileImg } = req.body;
@@ -403,6 +406,59 @@ export const RecomendedPost = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.log(error, 'RecomendedPost Error');
+
+  }
+}
+
+
+export const sendNotification = async (req: Request, res: Response) => {
+  try {
+    const { message, notifyDate, ReportPostId, userId } = req.body;
+
+    const InsertNotification = await CreateNotification(NotifyRepository)(message, notifyDate, ReportPostId, userId)
+    
+
+  } catch (error) {
+
+  }
+}
+
+export const getNotification = async (req: Request, res: Response) => {
+  try {
+
+    const userId = getUserIdFromJWT(req);
+
+
+    const getuserNotification = await findNotification(NotifyRepository)(userId);
+
+    res.json(getuserNotification)
+
+  } catch (error) {
+
+  }
+}
+
+export const ReadedNotification = async (req: Request, res: Response) => {
+  try {
+    const { Read } = req.body;
+    const userId = getUserIdFromJWT(req);
+    const updateRead = await UpdateReadNotification(NotifyRepository)(Read, userId);
+    console.log(updateRead, 'iiiiiii');
+    res.json(true)
+  } catch (error) {
+
+  }
+}
+
+export const DeletNotification = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromJWT(req);
+
+    const deletingNotifications = await DeleteUserNotification(NotifyRepository)(userId)
+    console.log(deletingNotifications);
+    res.json(true)
+
+  } catch (error) {
 
   }
 }
