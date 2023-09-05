@@ -12,6 +12,7 @@ import router from "./src/interfaces/Routes/userRouter";
 import { getNotification } from "./src/interfaces/Controllers/userController";
 import { Server } from "socket.io";
 import { Socket } from "dgram";
+import { userAuth } from "./src/interfaces/MiddleWares/userAuth";
 
 
 
@@ -41,6 +42,7 @@ declare module 'express-session' {
 
 const port = 3000;
 
+
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
@@ -49,29 +51,41 @@ const server = app.listen(port, () => {
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
+    // origin: "http://10.4.3.143:5173",
+    credentials: true,
+    
   },
+  
 });
 const clients: { [userId: string]: Socket } = {};
 io.on("connection", (socket) => {
-  console.log("A user connected to the WebSocket");
+  // console.log("A user connected to the WebSocket");
 
   socket.on('adminMessage', (data) => {
-
     console.log('Admin message received:', data);
     const targetSocket = data?.userId
     if (targetSocket) {
       io.emit('adminMessage', data);
     }
   });
+  socket.on('Chat',(data)=>{
+    io.emit('chat',data)
+  });
+
+  socket.on('CommunityChat',(data)=>{
+    io.emit('CommunityChat',data)
+  });
+
+
 
 
 });
 
 
 
-
-
 console.log(process.env.BASE_URL_ORIGIN);
+
+
 var cors = require("cors");
 app.use(
   cors({
@@ -88,3 +102,5 @@ app.use('/admin', adminRouter)
 
 
 
+
+    // origin: ["http://10.4.3.143:5173","http://localhost:5173"],

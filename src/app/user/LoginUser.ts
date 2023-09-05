@@ -2,12 +2,9 @@ import { UserRepository } from "../../infra/repositories/userRepository";
 import { User } from "../../domain/models/user";
 import bcrypt from 'bcrypt';
 
-export const loginUser =
-  (userRepository: UserRepository) => async (email: string, password: string): Promise<User | String> => {
+export const loginUser =(userRepository: UserRepository) => async (email: string, password: string): Promise<User | String> => {
     const user = await userRepository.findByEmail(email);
 
-    console.log(user,'usere');
-    
 
     if (user) {
       const verified = await bcrypt.compare(password, user?.password)

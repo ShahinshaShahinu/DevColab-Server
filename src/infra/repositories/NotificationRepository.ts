@@ -33,9 +33,7 @@ export const NotificationRepositoryImpl = (NotificationModel: MongoDBNotificatio
     }
 
     const findNotification = async (userId: string): Promise<notificationType[] | undefined> => {
-        try {
-            console.log(userId,'ssds');
-            
+        try {            
             const FindUserNotification = await NotificationModel.find({ userId: userId }).populate('ReportPostId')
             return FindUserNotification
         } catch (error) {

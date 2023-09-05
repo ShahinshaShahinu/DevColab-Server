@@ -42,7 +42,10 @@ const userSchema = new Schema<User>({
         type: 'string',
         default: 'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/wp-cms/uploads/2021/03/LinkedIn-Default-Background-2020-.jpg'
     },
-
+    role:{
+        type:String,
+        default:'user'
+    },
     profile: {
         FirstName: {
             type: 'string',

@@ -4,19 +4,19 @@ import { userModel } from './userModel';
 import { Comment } from '../../domain/models/Comment';
 
 
-export type MongoDbComment =Model<Document<any> & Comment>;
+export type MongoDbComment = Model<Document<any> & Comment>;
 
 
 
 const CommentSchema = new Schema<Comment>({
 
     postId: {
-        type:  Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: PostModel, // Reference to the Post model
         required: true,
     },
     userId: {
-        type:  Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: userModel, // Reference to the User model
         required: true,
     },
@@ -24,10 +24,10 @@ const CommentSchema = new Schema<Comment>({
         type: 'String',
         required: true,
     },
-    Date:{
-        type:'string',
-        required:true
+    Date: {
+        type: 'string',
+        required: true
     }
 });
 
-export const CommentModel:MongoDbComment = mongoose.connection.model<Document<any> & Comment>('Comment', CommentSchema);
+export const CommentModel: MongoDbComment = mongoose.connection.model<Document<any> & Comment>('Comment', CommentSchema);

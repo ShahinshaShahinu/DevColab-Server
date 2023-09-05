@@ -6,6 +6,7 @@ import { loginUser } from "../../app/user/LoginUser";
 import jsonToken, { Secret } from "jsonwebtoken";
 import { EmailOtpSend } from "../../utils/UserEmailOTP/EmailOtpnodemailer";
 import { Token } from "nodemailer/lib/xoauth2";
+import jsonwebtoken, { JwtPayload } from 'jsonwebtoken'
 import {
   FindAllUsers,
   UpdatePassword,
@@ -44,6 +45,7 @@ const NotifyRepository = NotificationRepositoryImpl(NotificationModel);
 export const Signup = async (req: Request, res: Response) => {
   try {
     const { UserName, email, password, isGoogle, profileImg } = req.body;
+
 
     const bcryptedPassWord = await bcrypt.hash(password, 10);
 
@@ -86,7 +88,6 @@ export const Login = async (req: Request, res: Response) => {
 
   const { email, password } = req.body;
 
-
   try {
     const user = await loginUser(userRepository)(email, password);
 
@@ -101,13 +102,11 @@ export const Login = async (req: Request, res: Response) => {
 
       res.json({ Blocked: "Account Blocked" });
     } else {
-      const { _id } = JSON.parse(JSON.stringify(user));
+      const { _id, role } = JSON.parse(JSON.stringify(user));
 
-      const accessToken = jsonToken.sign({ sub: _id }, process.env.JWT_ACTOKEN as Secret, {
-        expiresIn: "6d",
+      const accessToken = jsonToken.sign({ sub: _id, role }, process.env.JWT_ACTOKEN as Secret, {
+        expiresIn: "10d",
       });
-
-
 
       const findHashtag: any = await getUserInfo(userRepository)(_id)
 
@@ -207,6 +206,35 @@ export const UserProfile = async (req: Request, res: Response) => {
     }
   } catch (error) { }
 };
+// authentication ...........//
+
+export const auth = async (req: Request, res: Response) => {
+  try {
+    console.log('auth auth auth');
+    
+    let token = req?.headers?.accessToken;
+    console.log(token, 'tokentokentokentokentoken');
+    if (token) {
+      let data = jsonwebtoken.verify(token as string, 'KEY') as JwtPayload;
+      if (data.exp) {
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        if (currentTimestamp > data.exp) {
+          console.log('Token has expired.');
+          res.json(false);
+        } else {
+          console.log(data);
+          res.json(true);
+        }
+      } else {
+        console.log(data);
+        res.json(true);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ error: "Invalid" });
+  }
+}
 
 // /////  User manage ment
 
@@ -394,7 +422,6 @@ export const PostsView = async (req: Request, res: Response) => {
 
 export const RecomendedPost = async (req: Request, res: Response) => {
   try {
-    console.log('vanuuuu');
 
     const userId = getUserIdFromJWT(req);
 
@@ -416,7 +443,7 @@ export const sendNotification = async (req: Request, res: Response) => {
     const { message, notifyDate, ReportPostId, userId } = req.body;
 
     const InsertNotification = await CreateNotification(NotifyRepository)(message, notifyDate, ReportPostId, userId)
-    
+
 
   } catch (error) {
 

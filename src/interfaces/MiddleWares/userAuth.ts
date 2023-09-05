@@ -5,33 +5,77 @@ import { request } from 'http';
 
 
 interface DecodedToken {
-    sub: string;
+    sub: any;
     exp: number;
     iat: number;
+    role: string;
   }
 
 
 
 
-  export const userAuth: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+//   export const userAuth: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+//       try {
+//           let token = req.headers.accesstoken;
+
+//           if (token) {
+//               const accKey: Secret = process.env.JWT_ACTOKEN as Secret;
+//               console.log('accKey:', accKey);
+
+//               const decoded = jwt.verify(token as string, process.env.JWT_ACTOKEN as Secret, { algorithms: ['HS256'] }) as DecodedToken;
+//               console.log('Decoded Token:', decoded);
+//           }
+//           next();
+//       } catch (error) {
+//           console.error("Token verification failed:", error);
+//           return res.status(401).json({ error: "Invalid token." });
+//       }
+// };
+
+
+export const userAuth: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     try {
-        let token = req.headers.accesstoken;
-
-        if (token) {
-            const accKey: Secret = process.env.JWT_ACTOKEN as Secret;
-            console.log('accKey:', accKey);
-
-            const decoded = jwt.verify(token as string, process.env.JWT_ACTOKEN as Secret, { algorithms: ['HS256'] }) as DecodedToken;
-            console.log('Decoded Token:', decoded);
-
+      console.log('auth auth auth');
+      const token = req.headers.accesstoken as string;
+      console.log(token, 'tokentokentokentokentoken');
+      
+      if (token) {
+        const accKey: Secret = process.env.JWT_ACTOKEN as Secret;
+        console.log('accKey:', accKey);
+  
+        const decoded = jwt.verify(token, accKey, { algorithms: ['HS256'] }) as DecodedToken;
+        console.log('Decoded Token:', decoded);
+  
+        if (decoded.exp) {
+          const currentTimestamp = Math.floor(Date.now() / 1000);
+          if (currentTimestamp > decoded.exp) {
+            console.log('Token has expired.');
+            return res.json(false);
+          } else {
+            next();
+          }
+        } else {
+          next();
         }
-
-        next();
+      } else {
+        return res.status(401).json({ error: "No token provided." });
+      }
     } catch (error) {
-        console.error("Token verification failed:", error);
-        return res.status(401).json({ error: "Invalid token." });
+      console.error("Token verification failed:", error);
+      return res.status(401).json({ error: "Invalid token." });
     }
-};
+  };
+
+
+
+
+
+
+
+
+
+
+
 
 export const getUserIdFromJWT = (request: Request): any => {
     try {

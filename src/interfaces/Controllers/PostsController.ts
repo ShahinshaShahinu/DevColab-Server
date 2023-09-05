@@ -3,7 +3,7 @@ import { DeleteUserPost, GetHomePosts, PostVideoDelete, UpdateComments, UpdateLi
 import { DeleteSavedPosts, SavePost, findSavedPost } from "../../app/SavingPost/SavePost";
 import { PostModel } from "../../infra/database/PostsModel";
 import { PostRepositoryImpl } from "../../infra/repositories/PostsRepository";
-import { Request, Response, response } from 'express';
+import { Request, Response } from 'express';
 import { SavedPostRepositoryImpl } from '../../infra/repositories/SavedPostsRepository';
 import { SavedPostsModel } from '../../infra/database/SavePosts';
 import mongoose from "mongoose";

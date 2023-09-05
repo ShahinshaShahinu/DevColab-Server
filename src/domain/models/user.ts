@@ -10,6 +10,7 @@ export interface User {
   token?: number;
   status?: boolean;
   UserBackgroundImage?: string;
+  role?: string;
   profile?: {
     FirstName: string;
     LastName: string;
@@ -59,6 +60,10 @@ export interface Data {
 
 
 export interface AllUsers {
+  senderId: any;
+  id: any;
+  image: string | undefined;
+  name: string | undefined;
   data?:any
   _id?: string;
   UserName: string;
