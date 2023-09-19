@@ -4,13 +4,14 @@ export interface Chats {
     _id?: string;
     userId: mongoose.Types.ObjectId | string 
     senderId?: mongoose.Types.ObjectId | string 
-    Message?: Array<{
+    Message?: [{
         text?: string;
         senderId: mongoose.Types.ObjectId | string;
         image?: String ,
         video?:String,
-        timestamp: string;
-    }>;
+        timestamp?: string;
+        readBy?: string[]
+    }];
     CreatedDate?: string;
 }
 

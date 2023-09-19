@@ -50,17 +50,17 @@ const server = app.listen(port, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
-    // origin: "http://10.4.3.143:5173",
+    // origin: ["http://192.168.43.228:5173", "http://localhost:5173"],
+    origin:process.env.BASE_URL_ORIGIN ,
     credentials: true,
-    
-  },
-  
-});
-const clients: { [userId: string]: Socket } = {};
-io.on("connection", (socket) => {
-  // console.log("A user connected to the WebSocket");
 
+  },
+
+});
+
+const emailToSocketIdMap = new Map();
+const socketidToEmailMap = new Map();
+io.on("connection", (socket) => {
   socket.on('adminMessage', (data) => {
     console.log('Admin message received:', data);
     const targetSocket = data?.userId
@@ -68,16 +68,45 @@ io.on("connection", (socket) => {
       io.emit('adminMessage', data);
     }
   });
-  socket.on('Chat',(data)=>{
-    io.emit('chat',data)
+  socket.on('Chat', (data) => {
+    io.emit('chat', data)
   });
 
-  socket.on('CommunityChat',(data)=>{
-    io.emit('CommunityChat',data)
+  socket.on('CommunityChat', (data) => {
+    io.emit('CommunityChat', data)
   });
 
 
 
+
+
+  socket.on("room:join", (data) => {
+    const { email, room } = data;
+    emailToSocketIdMap.set(email, socket.id);
+    socketidToEmailMap.set(socket.id, email);
+    io.to(room).emit("user:joined", { email, id: socket.id });
+    socket.join(room);
+    io.to(socket.id).emit("room:join", data);
+  });
+
+  socket.on("user:call", ({ to, offer }) => {
+    console.log('call accepted to --', to, 'offer --', offer);
+    io.to(to).emit("incomming:call", { from: socket.id, offer });
+  });
+
+  socket.on("call:accepted", ({ to, ans }) => {
+    io.to(to).emit("call:accepted", { from: socket.id, ans });
+  });
+
+  socket.on("peer:nego:needed", ({ to, offer }) => {
+    // console.log("peer:nego:needed", offer);
+    io.to(to).emit("peer:nego:needed", { from: socket.id, offer });
+  });
+
+  socket.on("peer:nego:done", ({ to, ans }) => {
+    // console.log("peer:nego:done", ans);
+    io.to(to).emit("peer:nego:final", { from: socket.id, ans });
+  });
 
 });
 
@@ -89,7 +118,9 @@ console.log(process.env.BASE_URL_ORIGIN);
 var cors = require("cors");
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+
+    // origin: ["http://192.168.43.228:5173", "http://localhost:5173"],
+    origin:process.env.BASE_URL_ORIGIN,
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
     credentials: true,
 
@@ -103,4 +134,4 @@ app.use('/admin', adminRouter)
 
 
 
-    // origin: ["http://10.4.3.143:5173","http://localhost:5173"],
+// origin: ["http://10.4.3.143:5173","http://localhost:5173"],

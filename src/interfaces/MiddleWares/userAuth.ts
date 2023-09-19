@@ -12,30 +12,8 @@ interface DecodedToken {
   }
 
 
-
-
-//   export const userAuth: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-//       try {
-//           let token = req.headers.accesstoken;
-
-//           if (token) {
-//               const accKey: Secret = process.env.JWT_ACTOKEN as Secret;
-//               console.log('accKey:', accKey);
-
-//               const decoded = jwt.verify(token as string, process.env.JWT_ACTOKEN as Secret, { algorithms: ['HS256'] }) as DecodedToken;
-//               console.log('Decoded Token:', decoded);
-//           }
-//           next();
-//       } catch (error) {
-//           console.error("Token verification failed:", error);
-//           return res.status(401).json({ error: "Invalid token." });
-//       }
-// };
-
-
 export const userAuth: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('auth auth auth');
       const token = req.headers.accesstoken as string;
       console.log(token, 'tokentokentokentokentoken');
       
@@ -44,7 +22,7 @@ export const userAuth: RequestHandler = (req: Request, res: Response, next: Next
         console.log('accKey:', accKey);
   
         const decoded = jwt.verify(token, accKey, { algorithms: ['HS256'] }) as DecodedToken;
-        console.log('Decoded Token:', decoded);
+        console.log('Decoded Token:User', decoded);
   
         if (decoded.exp) {
           const currentTimestamp = Math.floor(Date.now() / 1000);
@@ -61,7 +39,7 @@ export const userAuth: RequestHandler = (req: Request, res: Response, next: Next
         return res.status(401).json({ error: "No token provided." });
       }
     } catch (error) {
-      console.error("Token verification failed:", error);
+      // console.error("Token verification failed:", error);
       return res.status(401).json({ error: "Invalid token." });
     }
   };
@@ -89,6 +67,7 @@ export const getUserIdFromJWT = (request: Request): any => {
          }
         
      } catch (error) {
+        console.log(error);
         
      }
 }

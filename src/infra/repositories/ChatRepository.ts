@@ -1,3 +1,4 @@
+import { UpdateResult } from "mongodb";
 import { Chats } from "../../domain/models/Chats";
 import { ChatsModel, MongoDbChats } from "../database/ChatModel";
 
@@ -6,6 +7,7 @@ import { ChatsModel, MongoDbChats } from "../database/ChatModel";
 export type ChatRepository = {
     create: (chat: Chats) => Promise<Chats | null>,
     UserChats: (userId: string) => Promise<Chats[]>,
+    ReadedPersonalMessage: (ChatId: string, userId: string) => Promise<UpdateResult | Chats | null>,
 }
 
 export const ChatRepositoryImpl = (ChatsModel: MongoDbChats): ChatRepository => {
@@ -23,7 +25,7 @@ export const ChatRepositoryImpl = (ChatsModel: MongoDbChats): ChatRepository => 
         });
 
         if (existingChat) {
-      
+
             const updateChat = await ChatsModel.findOneAndUpdate(
                 { userId: chat?.userId },
                 { $push: { Message: chat?.Message } },
@@ -31,7 +33,7 @@ export const ChatRepositoryImpl = (ChatsModel: MongoDbChats): ChatRepository => 
             );
             return updateChat
         } else {
-  
+
             const ChatMessageCRT = await ChatsModel.create(chat);
             return ChatMessageCRT
         }
@@ -49,8 +51,37 @@ export const ChatRepositoryImpl = (ChatsModel: MongoDbChats): ChatRepository => 
         return chat
     }
 
+    const ReadedPersonalMessage = async (ChatId: string, userId: string): Promise<UpdateResult | Chats | null> => {
+        try {
+            const chat = await ChatsModel.findById(ChatId);
+
+    if (chat) {
+      const messages = chat.Message;
+      if (messages && messages.length > 0) {
+        const lastMessageIndex = messages.length - 1;
+        const lastMessage = messages[lastMessageIndex];
+        
+        if (lastMessage && lastMessage?.senderId !== userId && (!lastMessage?.readBy || !lastMessage?.readBy?.includes(userId))) {
+          if (!lastMessage.readBy) {
+            lastMessage.readBy = [];
+          }
+          
+          lastMessage?.readBy?.push(userId);
+          await chat.save();
+        }
+      }
+    }
+
+    return chat;
+        } catch (error) {
+            console.error('Error marking message as read:', error);
+            throw error;
+        }
+    }
+
     return {
         create,
-        UserChats
+        UserChats,
+        ReadedPersonalMessage
     }
 }

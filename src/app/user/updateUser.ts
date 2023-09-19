@@ -7,6 +7,11 @@ export const getUserInfo = (userRepository: UserRepository) => async (userId: st
 
   return userInfo
 }
+export const GetUserDataInfo = (userRepository: UserRepository) => async (userId: string) => {
+  const userInfo = await userRepository.GetUserDatas(userId);
+
+  return userInfo
+}
 
 export const getToken = (userRepository: UserRepository) => async (token: number, email: string) => {
   const userToken = await userRepository.findAndUpdateToken(token, email); // Pass both 'token' and 'email'
@@ -52,3 +57,15 @@ export const GetUserAllHashtag = (userRepository: UserRepository) => async (user
   const getHashtg = await userRepository.RecomendedPosts(userId);
   return getHashtg
 }
+
+
+
+// export const Following = (userRepository: UserRepository) => async (userId: string, folloWId: string) => {
+//   const followed = await userRepository.Follow(userId, folloWId);
+//   return followed
+// }
+
+// export const UnFollowing = (userRepository: UserRepository) => async (userId: string, folloWId: string) => {
+//   const followed = await userRepository.UnFollow(userId, folloWId);
+//   return followed
+// }

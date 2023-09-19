@@ -14,7 +14,7 @@ const chatsSchema = new Schema<Chats>({
         ref: userModel,
         required: true,
     },
-    senderId:{
+    senderId: {
         type: Schema.Types.ObjectId,
         ref: userModel,
         // required: true,
@@ -26,22 +26,25 @@ const chatsSchema = new Schema<Chats>({
             required: true,
         },
         senderId: {
-            type:Schema.Types.ObjectId,
-            ref:userModel,
+            type: Schema.Types.ObjectId,
+            ref: userModel,
             required: true,
         },
-        image:{
-            type:String
+        image: {
+            type: String
 
         },
-        video:{
-            type:String
+        video: {
+            type: String
         },
         timestamp: {
             type: String,
             required: true,
         },
-   
+        readBy: [{
+            type: String,
+            ref: userModel,
+        }]
     }],
     CreatedDate: {
         type: 'string',

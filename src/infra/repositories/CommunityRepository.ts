@@ -11,6 +11,7 @@ export type CommunityRepository = {
     SendMessages: (Message: SendMessagess, id: String) => Promise<SendMessagess | undefined>
     getRecomendedCommunities: (userId: string) => Promise<Community[] |object[]>
     JoinCommunities:(userId:string , CommunityId: string) => Promise <Community | undefined>
+    find:()=> Promise <Community[]|undefined>
 }
 
 
@@ -124,6 +125,15 @@ export const CommunityRepositoryIMPL = (communityModel: MongoDbCommunity): Commu
             return undefined;
         }
     };
+    const find = async():Promise<Community[] | undefined>=>{
+        try {
+            const countCommunity = await CommunityModel.find();
+            return countCommunity
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
     
 
     // const ClearMessages = async (CommunityID: string, userId: string): Promise<Community | undefined> => {
@@ -166,7 +176,7 @@ export const CommunityRepositoryIMPL = (communityModel: MongoDbCommunity): Commu
         AlreadyCreated,
         SendMessages,
         getRecomendedCommunities,
-        JoinCommunities
+        JoinCommunities,find
         
     }
 }

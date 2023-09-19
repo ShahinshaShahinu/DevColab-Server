@@ -1,16 +1,16 @@
 import { CraetePost } from "../../app/Posts/Posts";
-import { DeleteUserPost, GetHomePosts, PostVideoDelete, UpdateComments, UpdateLike, UpdateUserPost, getPostinfo } from "../../app/Posts/UpdatePosts";
+import { DeletePosthashtags, DeleteUserPost, GetHomePosts, PostVideoDelete, UpdateComments, UpdateLike, UpdateUserPost, getPostinfo } from "../../app/Posts/UpdatePosts";
 import { DeleteSavedPosts, SavePost, findSavedPost } from "../../app/SavingPost/SavePost";
 import { PostModel } from "../../infra/database/PostsModel";
 import { PostRepositoryImpl } from "../../infra/repositories/PostsRepository";
-import { Request, Response } from 'express';
+import { Request, Response, response } from 'express';
 import { SavedPostRepositoryImpl } from '../../infra/repositories/SavedPostsRepository';
 import { SavedPostsModel } from '../../infra/database/SavePosts';
 import mongoose from "mongoose";
 import { Posts } from "../../domain/models/Posts";
 import { getUserIdFromJWT } from "../MiddleWares/userAuth";
 import { CommentRepositoryImpl } from '../../infra/repositories/CommentRepository';
-import { CreateComment } from '../../app/Comment/Comment';
+import { CreateComment, UpdatePostComment } from '../../app/Comment/Comment';
 import { CommentModel } from "../../infra/database/CommentModel";
 import { DeleteResult, ObjectId } from "mongodb";
 import { SavingPostResult } from "../../domain/models/SavedPost";
@@ -153,7 +153,6 @@ export const HomePosts = async (req: Request, res: Response) => {
 
 
 
-
 export const EditUSerPost = async (req: Request, res: Response) => {
     try {
 
@@ -227,6 +226,16 @@ export const AddCommentOnPost = async (req: Request, res: Response) => {
     }
 }
 
+export const EditComment = async (req: Request, res: Response) => {
+    try {
+        const { data, PostCommentId } = req.body;
+        const response = await UpdatePostComment(commentRepository)(PostCommentId, data);
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+
+    }
+}
 
 export const UserSavedPosts = async (req: Request, res: Response) => {
     try {
@@ -259,3 +268,14 @@ export const DeleteVideo = async (req: Request, res: Response) => {
 }
 
 
+export const DeleteHashtag = async (req: Request, res: Response) => {
+    try {
+        const {PostId, PosHashtag} = req.body;
+        const ress = await DeletePosthashtags(postRepository)(PostId, PosHashtag)
+
+        res.json(ress)
+    } catch (error) {
+
+    }
+
+}

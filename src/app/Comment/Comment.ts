@@ -18,3 +18,8 @@ export const CreateComment = (commentRepository:CommentRepository) => async (pos
       return createdComment;
 
 }
+
+export const UpdatePostComment = (commentRepository:CommentRepository) => async (PostCommentId:string,Comment:string) =>{
+   const Updated = await commentRepository.update(PostCommentId,Comment);
+   return Updated
+}

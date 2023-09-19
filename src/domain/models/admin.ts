@@ -3,4 +3,5 @@ export interface Admin {
     password:string;
     profileImg?:string;
     _id?:string
+    role?:string
 }

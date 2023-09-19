@@ -51,3 +51,8 @@ export const PostVideoDelete =  (postRepository: PostRepository) => async (index
     const deleting = await postRepository.DeleteVideo(index,PostId);
     return deleting
 }
+
+export const DeletePosthashtags =(postRepository: PostRepository) => async (PostId: string, hashtagTag: string): Promise<UpdateWriteOpResult | null> =>{
+    const deleted = await postRepository.DeletepostHashtag(PostId,hashtagTag);
+    return deleted
+}

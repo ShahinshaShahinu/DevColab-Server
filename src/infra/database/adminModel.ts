@@ -18,7 +18,11 @@ const adminSchema = new Schema<Admin>({
     profileImg: {
         type: 'string',
         default: "https://st4.depositphotos.com/7486768/19781/v/600/depositphotos_197819990-stock-illustration-profile-anonymous-face-icon-gray.jpg"
-    }
+    },
+    role: {
+        type: String,
+        default: 'admin'
+    },
 })
 
 

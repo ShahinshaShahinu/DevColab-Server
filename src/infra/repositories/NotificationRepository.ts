@@ -1,5 +1,5 @@
 import { DeleteResult } from "mongodb"
-import { notificationType } from "../../domain/models/Notification"
+import { ChatnotificationType, notificationType } from "../../domain/models/Notification"
 import { MongoDBNotification, NotificationModel } from "../database/NotificationModel"
 import { UpdateWriteOpResult } from "mongoose"
 
@@ -8,7 +8,7 @@ import { UpdateWriteOpResult } from "mongoose"
 
 
 export type NotificationRepository = {
-    insert: (Notification: notificationType) => Promise<notificationType | null>
+    insert: (Notification: notificationType) => Promise<notificationType |ChatnotificationType| null>
     findNotification: (userId: string) => Promise<notificationType[] | undefined>
     UpdateRead: (Read: Boolean, userId: string) => Promise<UpdateWriteOpResult>
     DeleteNotification: (userId: string) => Promise<DeleteResult | undefined>
@@ -21,7 +21,7 @@ export const NotificationRepositoryImpl = (NotificationModel: MongoDBNotificatio
 
 
 
-    const insert = async (Notification: notificationType): Promise<notificationType | null> => {
+    const insert = async (Notification: notificationType): Promise<notificationType |ChatnotificationType| null> => {
         try {
             const InsertNotification = await NotificationModel.create(Notification);
             return InsertNotification
@@ -34,31 +34,35 @@ export const NotificationRepositoryImpl = (NotificationModel: MongoDBNotificatio
 
     const findNotification = async (userId: string): Promise<notificationType[] | undefined> => {
         try {            
-            const FindUserNotification = await NotificationModel.find({ userId: userId }).populate('ReportPostId')
+            const FindUserNotification = await NotificationModel.find({ senderId: userId }).populate('ReportPostId').populate('senderId').populate('userId').sort({_id:-1});
+
+            
             return FindUserNotification
         } catch (error) {
 
         }
     }
 
-    const UpdateRead = async (Read: Boolean, userId: string): Promise<UpdateWriteOpResult> => {
+    const UpdateRead = async (Read: Boolean, senderId: string): Promise<UpdateWriteOpResult> => {
         try {
-            const filter = { userId };
+                  // Define the filter to find the documents to update
+        const filter = { senderId };
 
-            const update = { read: Read };
+        // Define the update operation to set the 'read' field
+        const update = { $set: { read: Read } };
 
-            const options = { multi: true };
+        // Use the 'updateMany' method to update all matching documents
+        const updatedNotifications = await NotificationModel.updateMany(filter, update);
 
-            const updatedNotifications = await NotificationModel.updateMany(filter, update, options);
-            return updatedNotifications;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
+        return updatedNotifications;                                                                                                                                                                                                                                                                                                                                1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
+    } 
     const DeleteNotification = async (userId: string): Promise<DeleteResult | undefined> => {
         try {
-            const deleteUserNOtification = await NotificationModel.deleteMany({ userId: userId });
+            const deleteUserNOtification = await NotificationModel.deleteMany({ senderId: userId });
             return deleteUserNOtification
         } catch (error) {
             console.log(error);

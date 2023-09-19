@@ -1,4 +1,5 @@
 
+import { Schema, Document, model } from 'mongoose';
 
 export interface User {
   _id?: string;
@@ -26,6 +27,8 @@ export interface User {
       }
     ]
   }
+  Userfollowers?: string[];
+  Joined?:String
 }
 
 

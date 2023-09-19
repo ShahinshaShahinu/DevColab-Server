@@ -43,6 +43,12 @@ export const JoinUserToCommunity = (CommunityRepository: CommunityRepository) =>
     return JoinedUser
 }
 
+export const findAllCommunity = (CommunityRepository: CommunityRepository) => async  () =>{
+    const FindAll = await CommunityRepository.find();
+    return FindAll
+}
+
+
 // export const ClearChats =  (CommunityRepository: CommunityRepository) => async (CommunityID: string, userId: string) =>{
 //     const cleared = await CommunityRepository.ClearMessages(CommunityID,userId);
 //     return cleared

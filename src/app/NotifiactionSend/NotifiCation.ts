@@ -1,14 +1,25 @@
 import { UpdateWriteOpResult } from 'mongoose';
-import { notificationType } from '../../domain/models/Notification';
+import { ChatMessage, ChatnotificationType, notificationType } from '../../domain/models/Notification';
 import { NotificationRepository } from '../../infra/repositories/NotificationRepository';
 import { DeleteResult } from 'mongodb';
 
 
-export const CreateNotification = (notificationRepository: NotificationRepository) => async (Message: string, NotifyDate: string, ReportPostId: string, userId: string): Promise<notificationType | null> => {
+export const CreateNotification = (notificationRepository: NotificationRepository) => async (Message: string, NotifyDate: string, ReportPostId: string, senderId: string): Promise<notificationType | null> => {
     const newNotification: notificationType = {
         Message,
         NotifyDate,
         ReportPostId,
+        senderId
+    }
+
+    const InsertNewNotification = await notificationRepository.insert(newNotification);
+    return InsertNewNotification
+}
+
+export const CreateChatNotification = (notificationRepository: NotificationRepository) => async (ChatMessage:ChatMessage, senderId: string, userId: string): Promise<ChatnotificationType|notificationType| null> => {
+    const newNotification: ChatnotificationType = {
+        ChatMessage,
+        senderId,
         userId
     }
 

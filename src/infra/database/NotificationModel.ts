@@ -1,29 +1,35 @@
 import mongoose, { Model, Schema, Document } from "mongoose";
-import { notificationType } from "../../domain/models/Notification";
+import { ChatnotificationType, notificationType, ChatMessage } from '../../domain/models/Notification';
 import { PostModel } from "./PostsModel";
+import { userModel } from "./userModel";
 
 
 
 
-export type MongoDBNotification = Model<Document<any>& notificationType>;
+export type MongoDBNotification = Model<Document<any>& notificationType|ChatnotificationType>;
 
-const NotificationSchema= new Schema <notificationType>({
+const NotificationSchema= new Schema <notificationType|ChatnotificationType>({
 
     Message:{
         type:String,
-        required:true,
     },
     NotifyDate:{
         type:String,
-        required:true
     },
     ReportPostId:{
         type:String,    
         ref:PostModel
     },
+    ChatMessage: {
+        type: Object
+      },
     userId:{
         type:String,
-        required:true
+        ref:userModel
+    },
+    senderId:{
+        type:String,
+        ref:userModel
     },
     read:{
         type:Boolean,
@@ -33,4 +39,4 @@ const NotificationSchema= new Schema <notificationType>({
 })
 
 
-export const NotificationModel:MongoDBNotification =mongoose.connection.model<Document <any> & notificationType >('Notification',NotificationSchema)
+export const NotificationModel:MongoDBNotification =mongoose.connection.model<Document <any> & notificationType|ChatnotificationType >('Notification',NotificationSchema)

@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { BlockReportedPost, DeleteHashTag, HashTagManagement, ReportManageMent, UnBlockReportedPost, adminLogin } from "../Controllers/adminController";
+import { BlockReportedPost, DashbordDAta, DeleteHashTag, HashTagManagement, ReportManageMent, UnBlockReportedPost, adminLogin } from "../Controllers/adminController";
 import { BloackUser, UnBloackUser, UserManagement } from "../Controllers/userController";
 import { AddHashTag } from "../Controllers/adminController";
+import { adminAuth } from "../MiddleWares/adminAuth";
 
 
 
@@ -9,9 +10,10 @@ import { AddHashTag } from "../Controllers/adminController";
 const router = Router();
 
 
-router.get('/UserManageMent/Users', UserManagement);
-router.get('/HashTagManageMent', HashTagManagement);
+router.get('/UserManageMent/Users',adminAuth, UserManagement);
+router.get('/HashTagManageMent',adminAuth, HashTagManagement);
 router.get('/ReportManageMent',ReportManageMent);
+router.get('/DashbordDAta',DashbordDAta)
 
 router.post('/login', adminLogin);
 router.post('/UserManageMent/UnBloack/:email', UnBloackUser)

@@ -4,6 +4,7 @@ import { MongoDBSavedPost, SavedPostsModel } from '../database/SavePosts';
 import { ObjectId } from 'mongodb';
 import { userModel } from '../database/userModel';
 import { SavingPosts } from '../../interfaces/Controllers/PostsController';
+import { CommentModel } from '../database/CommentModel';
 
 export type SavedPostRepository = {
     SavePost: (SavingPost: SavedPosts) => Promise<SavedPosts | object |string>,
@@ -43,10 +44,22 @@ export const SavedPostRepositoryImpl = (SavedPostsModel: MongoDBSavedPost): Save
 
 
     const findSavedPosts = async (userId: mongoose.Types.ObjectId): Promise<SavedPosts[] | object> => {
-        const SavedPosts = await SavedPostsModel.find({ userId }).populate('PostId').populate('userId').populate({path: 'PostId',populate: {
-            path: 'userId',
-            model:userModel
-        }});
+        // const SavedPosts = await SavedPostsModel.find({ userId }).populate('PostId').populate('userId').populate({path: 'PostId',populate: {
+        //     path: 'userId',
+        //     model:userModel
+        // }});
+        const SavedPosts = await SavedPostsModel.find({ userId }).populate('PostId').populate('userId').populate({ path: 'PostId', populate: { path: 'userId' } }).populate({
+            path: 'PostId',
+            populate: {
+              path: 'Comments',
+              options: { sort: { _id: -1 } },
+              populate: {
+                path: 'userId',
+                model: userModel
+              }
+            }
+          });
+          
 
         return SavedPosts;
     };

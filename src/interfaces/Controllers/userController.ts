@@ -9,6 +9,7 @@ import { Token } from "nodemailer/lib/xoauth2";
 import jsonwebtoken, { JwtPayload } from 'jsonwebtoken'
 import {
   FindAllUsers,
+  GetUserDataInfo,
   UpdatePassword,
   UpdateUserBGImage,
   UpdateUserHashtag,
@@ -31,9 +32,12 @@ import { ReportPostModel } from "../../infra/database/ReportPostModel";
 import { InsertReportPost } from "../../app/ReportPost/SaveReportPost";
 import { ObjectId } from "mongodb";
 import { GetUserAllHashtag } from '../../app/user/updateUser';
-import { CreateNotification, DeleteUserNotification, UpdateReadNotification, findNotification } from "../../app/NotifiactionSend/NotifiCation";
+import { CreateChatNotification, CreateNotification, DeleteUserNotification, UpdateReadNotification, findNotification } from "../../app/NotifiactionSend/NotifiCation";
 import { NotificationModel } from '../../infra/database/NotificationModel';
 import { NotificationRepositoryImpl } from "../../infra/repositories/NotificationRepository";
+import { Findfollowings, Following, UnFollowing } from "../../app/user/Followers";
+import { FollowersRepositoryImpl } from "../../infra/repositories/FollowersRepository";
+import { FollowersModel } from "../../infra/database/UsersFollowersModel";
 
 
 const db = userModel; // Instantiate MongoDB connection
@@ -42,6 +46,7 @@ const userRepository = UserRepositoryImpl(db);
 const postRepository = PostRepositoryImpl(PostModel);
 const ReportRepository = ReportPostRepositoryImpl(ReportPostModel);
 const NotifyRepository = NotificationRepositoryImpl(NotificationModel);
+const folowersRepositiory = FollowersRepositoryImpl(FollowersModel)
 export const Signup = async (req: Request, res: Response) => {
   try {
     const { UserName, email, password, isGoogle, profileImg } = req.body;
@@ -85,13 +90,9 @@ export const Signup = async (req: Request, res: Response) => {
 
 export const Login = async (req: Request, res: Response) => {
 
-
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
     const user = await loginUser(userRepository)(email, password);
-
-
     if (user === "email") {
       res.json({ message: "invalid email" });
     } else if (user === "password") {
@@ -103,6 +104,7 @@ export const Login = async (req: Request, res: Response) => {
       res.json({ Blocked: "Account Blocked" });
     } else {
       const { _id, role } = JSON.parse(JSON.stringify(user));
+console.log(role,'role user ano');
 
       const accessToken = jsonToken.sign({ sub: _id, role }, process.env.JWT_ACTOKEN as Secret, {
         expiresIn: "10d",
@@ -211,7 +213,7 @@ export const UserProfile = async (req: Request, res: Response) => {
 export const auth = async (req: Request, res: Response) => {
   try {
     console.log('auth auth auth');
-    
+
     let token = req?.headers?.accessToken;
     console.log(token, 'tokentokentokentokentoken');
     if (token) {
@@ -310,11 +312,24 @@ export const UpdateProfile = async (req: Request, res: Response) => {
 
 export const GetUserProfile = async (req: Request, res: Response) => {
   try {
-    let userId: string = req.params.userId;
+    let userId: string = req?.params?.userId;
     const UserPosts = await getPostinfo(postRepository)(userId);
     const userProfileData = await getUserInfo(userRepository)(userId);
     let count = UserPosts?.length;
     res.json({ userProfileData, UserPosts, count });
+  } catch (error) {
+
+  }
+};
+export const GetUserData = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromJWT(req);
+    console.log('userss');
+
+    const userProfileData = await GetUserDataInfo(userRepository)(userId);
+    console.log(userProfileData, 'ssd');
+
+    res.json({ userProfileData });
   } catch (error) {
 
   }
@@ -450,11 +465,26 @@ export const sendNotification = async (req: Request, res: Response) => {
   }
 }
 
+export const sendChatsNotification = async (req: Request, res: Response) => {
+  try {
+    const { ChatMessage,senderId } = req.body;
+    const userId = getUserIdFromJWT(req);
+    console.log(userId,'--userid',senderId,'--senderId');
+    
+    const InsertNotification = await CreateChatNotification(NotifyRepository)(ChatMessage, senderId, userId)
+
+    console.log('ChatNOtificaion inserted',InsertNotification);
+    
+
+  } catch (error) {
+
+  }
+}
+
 export const getNotification = async (req: Request, res: Response) => {
   try {
 
     const userId = getUserIdFromJWT(req);
-
 
     const getuserNotification = await findNotification(NotifyRepository)(userId);
 
@@ -488,4 +518,45 @@ export const DeletNotification = async (req: Request, res: Response) => {
   } catch (error) {
 
   }
+}
+
+
+export const Follow = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromJWT(req);
+    const { FollowId } = req.body
+    const Followed = await Following(folowersRepositiory)(userId, FollowId);
+    if (Followed) {
+      res.json(Followed)
+    }
+  } catch (error) {
+    console.log(error,'foloow error ');
+    
+  }
+
+}
+export const UnFollow = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromJWT(req);
+    const { UnFollowId } = req.body
+    const Followed = await UnFollowing(folowersRepositiory)(userId, UnFollowId);
+    if (Followed) {
+      res.json(Followed)
+    }
+  } catch (error) {
+
+  }
+
+}
+
+export const userFollowers = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromJWT(req);
+    const getfollowings = await Findfollowings(folowersRepositiory)(userId);
+    res.json(getfollowings)
+  } catch (error) {
+    console.log(error);
+
+  }
+
 }

@@ -11,8 +11,6 @@ export const LoginAdmin = (adminRepository: AdminRepository) => async (email: st
 
 
     if (admin) {
-     console.log(admin ,' admin');
-     
 
         if (admin.password == password && admin.email == email) {
         

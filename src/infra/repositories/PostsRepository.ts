@@ -12,15 +12,16 @@ import { userModel } from '../database/userModel';
 
 export type PostRepository = {
   create: (post: Posts) => Promise<Posts>,
-  findPosts: (userId: string) => Promise<Posts[] | null | undefined>,
+  findPosts: (userId: string) => Promise<Posts[] |undefined>,
   find: () => Promise<Posts[]>,
-
   DeletePost: (PostId: string) => Promise<object | null | undefined>,
-  UpdatePost: (PostId: string, title: string, content: string, image: string, HashTag: string[] ,uploadedVideoUrls:string[]) => Promise<UpdateWriteOpResult | undefined>
+  UpdatePost: (PostId: string, title: string, content: string, image: string, HashTag: string[], uploadedVideoUrls: string[]) => Promise<UpdateWriteOpResult | undefined>
   UpdatePostLike: (PostId: string, userId: string) => Promise<string | string | undefined>
   UpdateComments: (PostId: string, CommentId: string) => Promise<UpdateWriteOpResult | undefined>;
   findPost: (PostId: string) => Promise<Posts | null | undefined>,
-  DeleteVideo: (index: number, PostId: string) => Promise<UpdateWriteOpResult | number>
+  DeleteVideo: (index: number, PostId: string) => Promise<UpdateWriteOpResult | number>,
+  CreatedPostDAte: () => Promise<{ month: string; count: number }[] | undefined>
+  DeletepostHashtag: (PostId: string, hashtagTag: string) => Promise<UpdateWriteOpResult | null> 
 }
 
 export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
@@ -31,22 +32,26 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     return createdPost;
   };
 
-  const findPosts = async (userId: string): Promise<Posts[] | null | undefined> => {
+  const findPosts = async (userId: string): Promise<Posts[] | undefined> => {
     try {
       const posts = await PostModel.find({ userId: userId }).populate('userId').sort({ _id: -1 });
 
-      const mappedPosts: Posts[] = posts.map(post => ({
-        _id: post._id,
-        title: post.title,
-        content: post.content,
-        image: post.image,
-        userId: post.userId,
-        HashTag: post.HashTag,
-        Videos: post?.Videos,
-        status: post?.status
-      }));
-      return mappedPosts
+      
+      
+      return posts.map((postUser) => postUser?.toObject());
+      
     } catch (error) {
+      // const mappedPosts: Posts[] = posts.map(post => ({
+      //   _id: post._id,
+      //   title: post.title,
+      //   content: post.content,
+      //   image: post.image,
+      //   userId: post.userId,
+      //   HashTag: post.HashTag,
+      //   Videos: post?.Videos,
+      //   status: post?.status,
+        
+      // }));
       console.log(error, 'eerer');
     }
   }
@@ -73,7 +78,11 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
           path: 'userId',
           model: userModel
         }
+      }).populate({
+        path: 'likes.LikedUsers.userId',
+        model: userModel
       });
+
       return posts.map((postUser) => postUser.toObject());
     } catch (error) {
       console.log(error, 'erere');
@@ -85,13 +94,13 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
 
 
 
-  const UpdatePost = async (PostId: string, title: string, content: string, image: string, HashTag: string[] ,uploadedVideoUrls:string[]) => {
+  const UpdatePost = async (PostId: string, title: string, content: string, image: string, HashTag: string[], uploadedVideoUrls: string[]) => {
     try {
 
       const objectIdPostId = new ObjectId(PostId);
       console.log(HashTag, 'hs');
 
-      const UpdatedPost = await PostModel.updateOne({ _id: objectIdPostId }, { $set: { title: title, content: content, image: image, HashTag: HashTag },  $addToSet: { Videos: { $each: uploadedVideoUrls } } });
+      const UpdatedPost = await PostModel.updateOne({ _id: objectIdPostId }, { $set: { title: title, content: content, image: image, HashTag: HashTag }, $addToSet: { Videos: { $each: uploadedVideoUrls } } });
       console.log(UpdatePost, 'update');
 
       return UpdatedPost
@@ -179,7 +188,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
       const post = await PostModel.findById(PostId);
 
       if (!post) {
-        return 404; 
+        return 404;
       }
       if (post.Videos && index >= 0 && index < post?.Videos.length) {
         const updateResult = await PostModel.updateOne(
@@ -192,9 +201,64 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
       }
     } catch (error) {
       console.error(error);
-      return 500; 
+      return 500;
     }
   }
+
+
+  const CreatedPostDAte = async (): Promise<{ month: string; count: number }[] | undefined> => {
+    try {
+      const result = await PostModel.aggregate([
+        {
+          $group: {
+            _id: { $substr: ['$Created', 0, 3] },
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      console.log(result, 'resssssssssssssssssssssssssssssss');
+
+
+      const monthCountsMap: { [key: string]: number } = {};
+
+      result.forEach(({ _id, count }) => {
+        monthCountsMap[_id] = count;
+      });
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthCountsArray = monthNames.map((monthName) => ({
+        month: monthName,
+        count: monthCountsMap[monthName] || 0,
+      }));
+
+      return monthCountsArray;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  const DeletepostHashtag = async (PostId: string, hashtagTag: string): Promise<UpdateWriteOpResult | null> => {
+    try {
+      const updatedPost = await PostModel.findOneAndUpdate(
+        { _id: PostId },
+        { $pull: { HashTag: hashtagTag } },
+        { new: true }
+      ) as Document & UpdateWriteOpResult;
+      if (updatedPost) {
+        console.log('Hashtag removed successfully');
+        return updatedPost;
+      } else {
+        console.log('Post not found or hashtag not removed.');
+        return null;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+
 
 
   return {
@@ -206,7 +270,9 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     UpdatePostLike,
     UpdateComments,
     findPost,
-    DeleteVideo
+    DeleteVideo,
+    CreatedPostDAte,
+    DeletepostHashtag
   };
 
 }

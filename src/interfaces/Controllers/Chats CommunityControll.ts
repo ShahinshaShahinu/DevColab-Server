@@ -1,4 +1,4 @@
-import { GetChats, SendMessage } from '../../app/Chats/Chat';
+import { GetChats, ReadedPersonalChat, SendMessage } from '../../app/Chats/Chat';
 import { ChatsModel } from '../../infra/database/ChatModel';
 import { ChatRepositoryImpl } from '../../infra/repositories/ChatRepository';
 import { Request, Response } from 'express';
@@ -133,6 +133,20 @@ export const JoinCommunity = async (req: Request, res: Response) => {
         
         res.json(data)
     } catch (error) {
+        
+    }
+}
+
+export const RadedPersonalMessage = async (req:Request,res:Response) =>{
+    try {
+        const {ChatId} = req.body
+        const userId = getUserIdFromJWT(req);
+        const Readedchat = await ReadedPersonalChat(chatRepository)(ChatId,userId);
+        console.log(Readedchat,'readedd resaded chat ');
+        res.json(Readedchat)
+
+    } catch (error) {
+        console.log(error);
         
     }
 }

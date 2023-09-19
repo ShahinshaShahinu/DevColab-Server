@@ -12,6 +12,7 @@ export type UserRepository = {
   findAndUpdateStatus: (empId: string, status: boolean) => Promise<boolean>
   find: () => Promise<User[]>;
   getUserInformation: (userId: string) => Promise<User | null>
+  GetUserDatas: (userId: string) => Promise<User | null>
   findAndUpdateToken: (token: number, email: string) => Promise<User | null>;
   findAndUpdatePassword: (userId: string, password: string) => Promise<UpdateWriteOpResult>
   updateProfileInfo: (userId: string, FirstName: string, LastName: string, Pronouns: string, Headline: string, Hashtags: [], AboutMe: string) => Promise<UpdateWriteOpResult>
@@ -19,6 +20,8 @@ export type UserRepository = {
   UpdateProfileImage: (userId: string, UserProfileImg: string) => Promise<UpdateWriteOpResult>
   UpdateHashTag: (userId: string, HashTag: object) => Promise<UpdateWriteOpResult | null>,
   RecomendedPosts: (userId: string) => Promise<string[]>;
+  Joined: () => Promise<{ month: string; count: number }[] | undefined>
+  // UnFollow: (userId: string, folloWId: string) => Promise<Document | null>
 };
 
 export const UserRepositoryImpl = (userModel: MongoDBUser): UserRepository => {
@@ -45,7 +48,14 @@ export const UserRepositoryImpl = (userModel: MongoDBUser): UserRepository => {
 
   const getUserInformation = async (userId: string) => {
 
-    const response = await userModel.findOne({ _id: userId }).populate('UserHshTag.SelectedTags.HshTagId');
+    const response = await userModel.findOne({ _id: userId }).populate('UserHshTag.SelectedTags.HshTagId')
+
+    return response
+  }
+  const GetUserDatas = async (userId: string) => {
+
+    const response = await userModel.findOne({ _id: userId }).populate('UserHshTag.SelectedTags.HshTagId').exec();
+
 
     return response
   }
@@ -123,7 +133,7 @@ export const UserRepositoryImpl = (userModel: MongoDBUser): UserRepository => {
   }
 
   const RecomendedPosts = async (userId: string): Promise<string[]> => {
-    const user = await userModel.findById({_id:userId}).populate({
+    const user = await userModel.findById({ _id: userId }).populate({
       path: 'UserHshTag.SelectedTags.HshTagId',
       model: HashtagModel
     });
@@ -135,13 +145,66 @@ export const UserRepositoryImpl = (userModel: MongoDBUser): UserRepository => {
     }
 
     const selectedTags = user.UserHshTag.SelectedTags;
-    
+
     const allHashtags = selectedTags.map(tag => tag.HshTagId);
 
     return allHashtags;
 
   }
+  // const Follow = async (userId: string, folloWId: string): Promise<Document | null> => {
+  //   try {
+  //     const updatedUser = await userModel.findByIdAndUpdate(
+  //       userId,
+  //       { $addToSet:  { followers: { userId: folloWId } } },
+  //       { new: true }
+  //     );
+  //     return updatedUser
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
+  // const UnFollow = async (userId: string, folloWId: string): Promise<Document | null> => {
+  //   try {
+  //     const updatedUser = await userModel.findByIdAndUpdate(
+  //       userId,
+  //       { $addToSet: { followers: { userId: folloWId } } },
+  //       { new: true }
+  //     );
+  //     return updatedUser
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  const Joined = async (): Promise<{ month: string; count: number }[] | undefined> => {
+    try {
+      const result = await userModel.aggregate([
+        {
+          $group: {
+            _id: { $substr: ['$Joined', 0, 3] },
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      const monthCountsMap: { [key: string]: number } = {};
+
+      result.forEach(({ _id, count }) => {
+        monthCountsMap[_id] = count;
+      });
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const monthCountsArray = monthNames.map((monthName) => ({
+        month: monthName,
+        count: monthCountsMap[monthName] || 0,
+      }));
+
+      return monthCountsArray;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
 
   return {
@@ -154,8 +217,10 @@ export const UserRepositoryImpl = (userModel: MongoDBUser): UserRepository => {
     findAndUpdateStatus,
     findAndUpdateToken,
     getUserInformation,
+    GetUserDatas,
     findAndUpdatePassword,
     UpdateHashTag,
-    RecomendedPosts
+    RecomendedPosts, Joined
+    // Follow, UnFollow
   };
 };

@@ -5,6 +5,15 @@ import { CommentModel } from "./CommentModel";
 
 
 
+const currentDate = new Date();
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const currentMonthIndex = currentDate.getMonth();
+const currentMonthName = monthNames[currentMonthIndex];
+
+
+
+
+
 export type MongoDBPost = Model<Document<any, any, any> & Posts>;
 
 
@@ -66,6 +75,10 @@ const PostSchema = new Schema<Posts>({
     },
     Videos:{
         type:Array,
+    },
+    Created:{
+        type:String,
+        default:currentMonthName
     }
 })
 

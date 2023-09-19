@@ -4,12 +4,18 @@
 import mongoose, { Model, Schema, Document } from "mongoose";
 import { User } from '../../domain/models/user'
 import { HashtagModel } from "./HashtagsModel";
+import { FollowersModel } from "./UsersFollowersModel";
 
 
 export interface SavedPosts {
-    HshTagId: mongoose.Types.ObjectId; 
-    
+    HshTagId: mongoose.Types.ObjectId;
+
 }
+const currentDate = new Date();
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const currentMonthIndex = currentDate.getMonth();
+const currentMonthName = monthNames[currentMonthIndex];
+
 
 export type MongoDBUser = Model<Document<any, any, any> & User>;
 
@@ -42,9 +48,9 @@ const userSchema = new Schema<User>({
         type: 'string',
         default: 'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/wp-cms/uploads/2021/03/LinkedIn-Default-Background-2020-.jpg'
     },
-    role:{
-        type:String,
-        default:'user'
+    role: {
+        type: String,
+        default: 'user'
     },
     profile: {
         FirstName: {
@@ -75,7 +81,12 @@ const userSchema = new Schema<User>({
                 }
             }
         ]
+    },
+    Joined:{
+        type:String,
+        default:currentMonthName
     }
+
 });
 
 export const userModel: MongoDBUser = mongoose.connection.model<Document<any, any, any> & User>('user', userSchema);

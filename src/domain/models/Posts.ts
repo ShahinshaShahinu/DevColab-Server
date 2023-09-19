@@ -24,6 +24,7 @@ export interface Posts {
   Comments?: mongoose.Types.ObjectId[];
   status?:boolean,
   Videos?:string[]
+  Created?:string
 }
 
 
