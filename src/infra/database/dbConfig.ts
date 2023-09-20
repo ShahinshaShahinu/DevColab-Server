@@ -1,8 +1,7 @@
 import mongoose  from'mongoose'
 
-
 export const db=()=>{
-    mongoose.connect('mongodb://localhost:27017/DevColab').then(()=>{
+    mongoose.connect(`${process.env.DATABASE_URL}`).then(()=>{
         console.log('database connected ');
         
     }).catch((error)=>{
