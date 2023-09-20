@@ -38,16 +38,3 @@ export interface UserIdObject {
     };
 }
 
-// interface Message {
-//     id: number;
-//     text: string;
-//     sender: 'user' | 'other';
-//     timestamp: string;
-// }
-
-// interface Chat {
-//     id: number;
-//     name: string;
-//     image: string;
-//     messages: Message[];
-// }
