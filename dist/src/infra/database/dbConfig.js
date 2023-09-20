@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.db = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const db = () => {
-    mongoose_1.default.connect('mongodb://localhost:27017/DevColab').then(() => {
+    mongoose_1.default.connect(`${process.env.DATABASE_URL}`).then(() => {
         console.log('database connected ');
     }).catch((error) => {
         console.log(error.message);
