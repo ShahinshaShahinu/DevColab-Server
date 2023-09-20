@@ -50,12 +50,9 @@ const server = app.listen(port, () => {
 
 const io = new Server(server, {
   cors: {
-    // origin: ["http://192.168.43.228:5173", "http://localhost:5173"],
     origin:process.env.BASE_URL_ORIGIN ,
     credentials: true,
-
-  },
-                                  
+  },                        
 });    
 
 const emailToSocketIdMap = new Map();
@@ -71,7 +68,6 @@ io.on("connection", (socket) => {
   socket.on('Chat', (data) => {
     io.emit('chat', data)
   });
-
   socket.on('CommunityChat', (data) => {
     io.emit('CommunityChat', data)
   });
@@ -99,39 +95,24 @@ io.on("connection", (socket) => {
   });
 
   socket.on("peer:nego:needed", ({ to, offer }) => {
-    // console.log("peer:nego:needed", offer);
     io.to(to).emit("peer:nego:needed", { from: socket.id, offer });
   });
-
   socket.on("peer:nego:done", ({ to, ans }) => {
-    // console.log("peer:nego:done", ans);
     io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   });
 
 });
 
 
-
-console.log(process.env.BASE_URL_ORIGIN);
-
-
 var cors = require("cors");
 app.use(
   cors({
-
-    // origin: ["http://192.168.43.228:5173", "http://localhost:5173"],
     origin:process.env.BASE_URL_ORIGIN,
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
     credentials: true,
-
   })
 );
 
 
 app.use("/", userRouter);
 app.use('/admin', adminRouter)
-
-
-
-
-// origin: ["http://10.4.3.143:5173","http://localhost:5173"],
