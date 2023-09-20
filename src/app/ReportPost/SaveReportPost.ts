@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import { ReportPosts } from '../../domain/models/ReportPost';
 import { ReportPostRepository } from '../../infra/repositories/ReportPostRepository';
 import { ObjectId } from 'mongodb';
-import { DeleteRePortPost } from '../../../../DevColab-Clients/src/services/API functions/AdminApi';
 import { DeleteResult } from '../../domain/models/SavedPost';
 // This is how ReportPosts might be defined
 
