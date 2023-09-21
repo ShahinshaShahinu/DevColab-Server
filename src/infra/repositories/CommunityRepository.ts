@@ -106,7 +106,10 @@ export const CommunityRepositoryIMPL = (communityModel: MongoDbCommunity): Commu
 
     const JoinCommunities = async (userId: string, CommunityId: string): Promise<Community | undefined> => {
         try {
+            
             const community = await CommunityModel.findById(CommunityId).exec();
+            console.log(community,'communitycommunitycommunitycommunitycommunity');
+            
             if (!community) {
                 console.error('Community not found');
                 return undefined;
@@ -118,7 +121,7 @@ export const CommunityRepositoryIMPL = (communityModel: MongoDbCommunity): Commu
             } else {
                 console.error('User is already a member of this community.');
             }
-    
+       
             return community;
         } catch (error) {
             console.error('Error:', error);

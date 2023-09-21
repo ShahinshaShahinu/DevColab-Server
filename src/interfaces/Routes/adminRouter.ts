@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { BlockReportedPost, DashbordDAta, DeleteHashTag, HashTagManagement, ReportManageMent, UnBlockReportedPost, adminLogin } from "../Controllers/adminController";
+import { BlockReportedPost, DashbordDAta, DeleteHashTag, HashTagManagement, ReportManageMent, UnBlockReportedPost, adminLogin, clearAllReportPosts } from "../Controllers/adminController";
 import { BloackUser, UnBloackUser, UserManagement } from "../Controllers/userController";
 import { AddHashTag } from "../Controllers/adminController";
 import { adminAuth } from "../MiddleWares/adminAuth";
@@ -22,6 +22,6 @@ router.post('/AddHashtag',AddHashTag);
 router.post('/AddHashtag/Delete/:HashTagId',DeleteHashTag);
 router.post ('/BlockReportedPost/:PostId',BlockReportedPost);
 router.post ('/UnBlockReportedPost/:PostId',UnBlockReportedPost);
-
+router.post('/clearReportPosts',clearAllReportPosts)
 
 export default router

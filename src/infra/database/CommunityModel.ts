@@ -25,7 +25,6 @@ const CommunitySchema = new Schema<Community>({
     Message: [{
         text: {
             type: String,
-            required: true,
         },
         senderId: {
             type: String,

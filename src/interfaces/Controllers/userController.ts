@@ -288,8 +288,7 @@ export const BloackUser = async (req: Request, res: Response) => {
 
 export const UpdateProfile = async (req: Request, res: Response) => {
   try {
-    const { FirstName, LastName, Pronouns, Headline, Hashtags, AboutMe } =
-      req.body;
+    const { FirstName, LastName, Pronouns, Headline, Hashtags, AboutMe } =req.body;
 
     let userId: string = req.params.userId;
     const userUpdated = await updateProfile(userRepository)(

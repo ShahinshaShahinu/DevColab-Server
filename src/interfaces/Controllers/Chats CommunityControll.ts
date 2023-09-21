@@ -128,7 +128,9 @@ export const SendCommunityMessage = async (req: Request, res: Response) => {
 export const JoinCommunity = async (req: Request, res: Response) => {
     try {
         const JoinUser = getUserIdFromJWT(req);
-        const {communityId} = req.body
+        const {communityId} = req?.body
+        console.log(communityId,'ccccc');
+        
         const data = await JoinUserToCommunity(communityRepository)(JoinUser,communityId);
         
         res.json(data)

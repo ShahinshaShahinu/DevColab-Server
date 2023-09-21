@@ -10,6 +10,7 @@ export type ReportPostRepository = {
     find: () => Promise<ReportPosts[]>,
     UpdatePostStatus: (PostId:ObjectId,status:boolean) =>Promise<boolean | object> 
     deleteReportPost:(PostId:ObjectId) => Promise <ReportPosts | DeleteResult> 
+    ClearReportPost:() => Promise <ReportPosts | DeleteResult> 
 }
 
 export const ReportPostRepositoryImpl = (ReportPostsModel: MongoDB_ReportPost): ReportPostRepository => {
@@ -46,7 +47,6 @@ export const ReportPostRepositoryImpl = (ReportPostsModel: MongoDB_ReportPost): 
 
     const find = async (): Promise<ReportPosts[]> => {
         try {
-            // const FindReportPost = await ReportPostModel.find().populate('userId').populate('PostId');
             const FindReportPost = await ReportPostModel.find().populate('userId').populate({
                 path: 'PostId',
                 populate: {
@@ -73,11 +73,16 @@ export const ReportPostRepositoryImpl = (ReportPostsModel: MongoDB_ReportPost): 
         return deletReportPost 
     }
 
+    const ClearReportPost = async (): Promise<ReportPosts | DeleteResult> =>{
+        const deletReportPost = await ReportPostModel.deleteMany();
+        return deletReportPost 
+    }
+
 
     return {
         ReportPostSave,
         find,
         UpdatePostStatus ,
-        deleteReportPost
+        deleteReportPost,ClearReportPost
     }
 }

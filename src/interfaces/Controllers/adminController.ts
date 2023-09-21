@@ -9,7 +9,6 @@ import { HashtagModel } from "../../infra/database/HashtagsModel";
 import { CreateHashTag, DeleteHashtags, GetHashTags } from "../../app/Hashtags/Hashtag";
 import { FindReportPost, ReportPostStatus } from "../../app/ReportPost/SaveReportPost";
 import { ReportPostRepositoryImpl } from "../../infra/repositories/ReportPostRepository";
-import { ReportPostModel } from "../../infra/database/ReportPostModel";
 import { ObjectId } from "mongodb";
 import { UserRepositoryImpl } from "../../infra/repositories/userRepository";
 import { userModel } from "../../infra/database/userModel";
@@ -19,6 +18,8 @@ import { PostModel } from "../../infra/database/PostsModel";
 import { findAllCommunity } from "../../app/Community/Community";
 import { CommunityModel } from "../../infra/database/CommunityModel";
 import { CommunityRepositoryIMPL } from "../../infra/repositories/CommunityRepository";
+import { ReportPostModel } from "../../infra/database/ReportPostModel";
+import { DeleteAllReportPosts } from '../../app/ReportPost/SaveReportPost'
 
 
 const db = adminModel
@@ -28,7 +29,9 @@ const hashTagRepository = HashtagRepositoryImpl(HashtagModel);
 const ReportRepository = ReportPostRepositoryImpl(ReportPostModel);
 const userRepository = UserRepositoryImpl(userdb);
 const postRepository = PostRepositoryImpl(PostModel);
+const ReportPost = ReportPostRepositoryImpl(ReportPostModel)
 const communityRepository = CommunityRepositoryIMPL(CommunityModel);
+
 export const adminLogin = async (req: Request, res: Response) => {
 
     const { email, password } = req.body
@@ -36,17 +39,17 @@ export const adminLogin = async (req: Request, res: Response) => {
     try {
 
         const admin = await LoginAdmin(adminRepository)(email, password);
-        
+
         if (admin === 'email') {
             res.json({ message: 'invalid email' });
         } else if (admin === 'password') {
             res.json({ message: 'Password NOt Correct' })
         }
         else if (admin) {
-            const {_id,role} = JSON.parse(JSON.stringify(admin));
-console.log(role ,'admin');
+            const { _id, role } = JSON.parse(JSON.stringify(admin));
+            console.log(role, 'admin');
 
-            const accessTokenAdmin = jsonToken.sign({ sub: _id,role },process.env.JWT_ACTOKEN as Secret , { expiresIn: '10d', algorithm: 'HS256'  })
+            const accessTokenAdmin = jsonToken.sign({ sub: _id, role }, process.env.JWT_ACTOKEN as Secret, { expiresIn: '10d', algorithm: 'HS256' })
 
             res.json({ admin, accessTokenAdmin })
         }
@@ -168,15 +171,30 @@ export const DashbordDAta = async (req: Request, res: Response) => {
         const AllUserMonths = await UsersJoined(userRepository)();
         const TotalUsers = Users?.length;
         const TotalPosts = HomePosts?.length;
-        const AllPosts=await PostCreatedDAte(postRepository)();
-        
+        const AllPosts = await PostCreatedDAte(postRepository)();
+
         const TotalCommunities = AllCommunity?.length;
         if (Users) {
- 
-            res.json({ TotalUsers, TotalPosts, TotalCommunities ,AllUserMonths ,AllPosts});
+
+            res.json({ TotalUsers, TotalPosts, TotalCommunities, AllUserMonths, AllPosts });
         }
     } catch (error) {
         console.log(error);
 
     }
 }
+
+
+export const clearAllReportPosts = async (req: Request, res: Response) => {
+    try {
+        console.log('llllllllllllllllllllllllllllll');
+        
+        const cleared = await DeleteAllReportPosts(ReportPost)(); 
+console.log(cleared,'cllll');
+
+        if(cleared) res.json(true)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};

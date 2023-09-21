@@ -55,3 +55,13 @@ export const  DelteRepportPost =  (reportRepository: ReportPostRepository) => as
         
     }
 }
+
+export const DeleteAllReportPosts =  (reportRepository: ReportPostRepository)=>async ():  Promise<ReportPosts | DeleteResult|undefined> => {
+    try {
+        const cleared:any = await reportRepository.ClearReportPost();
+        return cleared;
+
+    } catch (error) {
+        // Handle errors here
+    }
+}
