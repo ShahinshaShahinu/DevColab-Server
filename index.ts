@@ -78,15 +78,18 @@ io.on("connection", (socket) => {
 
   socket.on("room:join", (data) => {
     const { email, room } = data;
+    
     emailToSocketIdMap.set(email, socket.id);
     socketidToEmailMap.set(socket.id, email);
     io.to(room).emit("user:joined", { email, id: socket.id });
     socket.join(room);
     io.to(socket.id).emit("room:join", data);
   });
-
+  let answerOFFer:string
+  let TTo:string
   socket.on("user:call", ({ to, offer }) => {
-    console.log('call accepted to --', to, 'offer --', offer);
+    // console.log('call accepted to --', to, 'offer --', offer);
+    answerOFFer=offer;TTo=to
     io.to(to).emit("incomming:call", { from: socket.id, offer });
   });
 
@@ -100,6 +103,20 @@ io.on("connection", (socket) => {
   socket.on("peer:nego:done", ({ to, ans }) => {
     io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   });
+
+  socket.on('changeCamera',(data)=>{
+    io.emit('changeCamera',data)
+  });
+  socket.on('call',(from,offer,data)=>{
+    console.log('call vannu camera');
+    
+    io.emit('incomming:call',{ from: from, offer ,data })
+  })
+  // socket.on("VideoAudio",(data)=>{
+  //   console.log(data,'vvvvvvvvvvvvvvvvvvvvv', socket.id, answerOFFer);
+    
+  //   io.emit("VideoAudio", { from: socket.id, answerOFFer });
+  // })
 
 });
 

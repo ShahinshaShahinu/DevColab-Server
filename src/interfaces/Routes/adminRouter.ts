@@ -12,8 +12,8 @@ const router = Router();
 
 router.get('/UserManageMent/Users',adminAuth, UserManagement);
 router.get('/HashTagManageMent',adminAuth, HashTagManagement);
-router.get('/ReportManageMent',ReportManageMent);
-router.get('/DashbordDAta',DashbordDAta)
+router.get('/ReportManageMent',adminAuth,ReportManageMent);
+router.get('/DashbordDAta',adminAuth,DashbordDAta)
 
 router.post('/login', adminLogin);
 router.post('/UserManageMent/UnBloack/:email', UnBloackUser)

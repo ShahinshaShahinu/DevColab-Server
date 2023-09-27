@@ -29,8 +29,8 @@ export const HashtagRepositoryImpl = (HashtagModel: MongoDbHashtag): HashtagRepo
 
     const find = async (): Promise<IHashtag[]> => {
         try {
-            const allHashTags = await HashtagModel.find();
-            return allHashTags.map((tag) => tag.toObject());
+            const allHashTags = await HashtagModel?.find();
+            return allHashTags?.map((tag) => tag?.toObject());
         } catch (error) {
             console.error('An error occurred:', error);
             throw error;
