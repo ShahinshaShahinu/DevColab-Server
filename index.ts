@@ -104,13 +104,10 @@ io.on("connection", (socket) => {
     io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   });
 
-  socket.on('changeCamera',(data)=>{
-    io.emit('changeCamera',data)
-  });
-  socket.on('call',(from,offer,data)=>{
-    console.log('call vannu camera');
+  socket.on('changeCamera',(data,Id)=>{
+    console.log(data,Id ,'ddddddddddd');
     
-    io.emit('incomming:call',{ from: from, offer ,data })
+    io.emit('changeCamera',data,Id)
   })
   // socket.on("VideoAudio",(data)=>{
   //   console.log(data,'vvvvvvvvvvvvvvvvvvvvv', socket.id, answerOFFer);
