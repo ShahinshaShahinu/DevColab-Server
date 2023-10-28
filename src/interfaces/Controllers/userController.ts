@@ -107,7 +107,7 @@ export const Login = async (req: Request, res: Response) => {
 console.log(role,'role user ano');
 
       const accessToken = jsonToken.sign({ sub: _id, role }, process.env.JWT_ACTOKEN as Secret, {
-        expiresIn: "10s",
+        expiresIn: "10d",
       });
 
       const findHashtag: any = await getUserInfo(userRepository)(_id)
