@@ -14,6 +14,8 @@ interface DecodedToken {
 
 export const userAuth: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
     try {
+    
+      
       const token = req.headers.accesstoken as string;
       console.log(token, 'tokentokentokentokentoken');
       
@@ -22,13 +24,15 @@ export const userAuth: RequestHandler = (req: Request, res: Response, next: Next
         console.log('accKey:', accKey);
   
         const decoded = jwt.verify(token, accKey, { algorithms: ['HS256'] }) as DecodedToken;
-        console.log('Decoded Token:User', decoded);
+        // console.log('Decoded Token:User', decoded);
   
         if (decoded.exp) {
           const currentTimestamp = Math.floor(Date.now() / 1000);
           if (currentTimestamp > decoded.exp) {
             console.log('Token has expired.');
             return res.json(false);
+            
+            
           } else {
             next();
           }

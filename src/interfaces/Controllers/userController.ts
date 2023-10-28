@@ -107,7 +107,7 @@ export const Login = async (req: Request, res: Response) => {
 console.log(role,'role user ano');
 
       const accessToken = jsonToken.sign({ sub: _id, role }, process.env.JWT_ACTOKEN as Secret, {
-        expiresIn: "10d",
+        expiresIn: "10s",
       });
 
       const findHashtag: any = await getUserInfo(userRepository)(_id)
@@ -317,7 +317,8 @@ export const GetUserProfile = async (req: Request, res: Response) => {
     let count = UserPosts?.length;
     res.json({ userProfileData, UserPosts, count });
   } catch (error) {
-
+    console.log(error ,'getuser');
+    
   }
 };
 export const GetUserData = async (req: Request, res: Response) => {

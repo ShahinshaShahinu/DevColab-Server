@@ -19,7 +19,7 @@ router.get('/UserPostsView/:postId', PostsView);
 router.get('/RecomendedPost', RecomendedPost)
 router.get('/Notification', getNotification)
 router.get('/Chats', Chats);
-router.get('/Communities', Communities);
+router.get('/Communities',userAuth, Communities);
 router.get('/RecomendedCommunities', RecomendedCommunities);
 router.get('/GetUserData',GetUserData);
 router.get('/userFollowers',userFollowers)
