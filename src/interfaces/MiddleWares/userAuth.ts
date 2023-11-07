@@ -43,7 +43,7 @@ export const userAuth: RequestHandler = (req: Request, res: Response, next: Next
         return res.status(401).json({ error: "No token provided." });
       }
     } catch (error) {
-      // console.error("Token verification failed:", error);
+      console.error("Token verification failed:", error);
       return res.status(401).json({ error: "Invalid token." });
     }
   };

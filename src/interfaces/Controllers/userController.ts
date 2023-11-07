@@ -38,6 +38,9 @@ import { NotificationRepositoryImpl } from "../../infra/repositories/Notificatio
 import { Findfollowings, Following, UnFollowing } from "../../app/user/Followers";
 import { FollowersRepositoryImpl } from "../../infra/repositories/FollowersRepository";
 import { FollowersModel } from "../../infra/database/UsersFollowersModel";
+import { GetHashTags } from "../../app/Hashtags/Hashtag";
+import { HashtagRepositoryImpl } from "../../infra/repositories/HashtagsRepository";
+import { HashtagModel } from "../../infra/database/HashtagsModel";
 
 
 const db = userModel; // Instantiate MongoDB connection
@@ -46,7 +49,9 @@ const userRepository = UserRepositoryImpl(db);
 const postRepository = PostRepositoryImpl(PostModel);
 const ReportRepository = ReportPostRepositoryImpl(ReportPostModel);
 const NotifyRepository = NotificationRepositoryImpl(NotificationModel);
-const folowersRepositiory = FollowersRepositoryImpl(FollowersModel)
+const folowersRepositiory = FollowersRepositoryImpl(FollowersModel);
+const hashTagRepository = HashtagRepositoryImpl(HashtagModel);
+
 export const Signup = async (req: Request, res: Response) => {
   try {
     const { UserName, email, password, isGoogle, profileImg } = req.body;
@@ -559,4 +564,20 @@ export const userFollowers = async (req: Request, res: Response) => {
 
   }
 
+}
+
+
+export const HashTagManagement = async (req: Request, res: Response) => {
+  try {
+
+      const AllHashTags = await GetHashTags(hashTagRepository)();
+
+      if (AllHashTags) {
+
+          res.json(AllHashTags)
+      }
+
+  } catch (error) {
+
+  }
 }

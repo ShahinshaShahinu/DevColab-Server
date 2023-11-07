@@ -142,6 +142,7 @@ export const DaleteSavedPost = async (req: Request, res: Response) => {
 export const HomePosts = async (req: Request, res: Response) => {
     try {
 
+
         const HomePosts = await GetHomePosts(postRepository)();
 
         if (HomePosts) res.json(HomePosts)
@@ -177,20 +178,29 @@ export const Postslike = async (req: Request, res: Response) => {
         const userId = getUserIdFromJWT(req);
 
         const postId = req.params.PostId;
-        const UpdatedUserLIke = await UpdateLike(postRepository)(postId, userId);
-        if (UpdatedUserLIke === 'liked') {
+        if (userId) {
 
-            return res.status(200).json({ liked: true, message: 'Post like updated successfully' });
-        } else if (UpdatedUserLIke === 'Unliked') {
 
-            return res.status(200).json({ liked: false, error: 'Post Unliked updated successfully' });
+            const UpdatedUserLIke = await UpdateLike(postRepository)(postId, userId);
+            if (UpdatedUserLIke === 'liked') {
+
+                return res.status(200).json({ liked: true, message: 'Post like updated successfully' });
+            } else if (UpdatedUserLIke === 'Unliked') {
+
+                return res.status(200).json({ liked: false, error: 'Post Unliked updated successfully' });
+            }
         }
-        else {
-            return res.status(404).json({ err: true, error: 'Post not found' });
-        }
-    } catch (error) {
+       
+    } catch (error: any) {
         console.error(error);
-        res.status(500).json({ success: false, error: 'Server error' });
+
+        if (error.message === 'JWT expired') {
+            console.log('lll');
+            
+            res.status(401).json({ success: false, error: 'Invalid token.' });
+        } else {
+            res.status(500).json({ success: false, error: 'Server error' });
+        }
     }
 }
 
@@ -270,7 +280,7 @@ export const DeleteVideo = async (req: Request, res: Response) => {
 
 export const DeleteHashtag = async (req: Request, res: Response) => {
     try {
-        const {PostId, PosHashtag} = req.body;
+        const { PostId, PosHashtag } = req.body;
         const ress = await DeletePosthashtags(postRepository)(PostId, PosHashtag)
 
         res.json(ress)
