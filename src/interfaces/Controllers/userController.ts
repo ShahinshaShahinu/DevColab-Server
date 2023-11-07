@@ -474,11 +474,11 @@ export const sendChatsNotification = async (req: Request, res: Response) => {
   try {
     const { ChatMessage,senderId } = req.body;
     const userId = getUserIdFromJWT(req);
-    console.log(userId,'--userid',senderId,'--senderId');
+ 
     
     const InsertNotification = await CreateChatNotification(NotifyRepository)(ChatMessage, senderId, userId)
 
-    console.log('ChatNOtificaion inserted',InsertNotification);
+
     
 
   } catch (error) {
@@ -530,9 +530,11 @@ export const Follow = async (req: Request, res: Response) => {
   try {
     const userId = getUserIdFromJWT(req);
     const { FollowId } = req.body
-    const Followed = await Following(folowersRepositiory)(userId, FollowId);
-    if (Followed) {
-      res.json(Followed)
+    if(userId){
+      const Followed = await Following(folowersRepositiory)(userId, FollowId);
+      if (Followed) {
+        res.json(Followed)
+      }
     }
   } catch (error) {
     console.log(error,'foloow error ');

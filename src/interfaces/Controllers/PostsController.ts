@@ -157,7 +157,9 @@ export const HomePosts = async (req: Request, res: Response) => {
 export const EditUSerPost = async (req: Request, res: Response) => {
     try {
 
-        const PostId = req?.params?.PostId
+        const PostId = req?.params?.PostId;
+        console.log(PostId,'');
+        
         const { Taitle, previewContent, cloudImgUrl, HashTag, uploadedVideoUrls } = req.body
         const updated = await UpdateUserPost(postRepository)(PostId, Taitle, previewContent, cloudImgUrl, HashTag, uploadedVideoUrls);
 

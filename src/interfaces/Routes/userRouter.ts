@@ -34,15 +34,15 @@ router.post('/UpdatePassWord', UpdatePassWord)
 router.post('/profile/:userId', UpdateProfile)
 router.post('/profileBg_image/:BGimgUrl/:userId', BGimgUrlUpdate)
 router.post('/profileImageChange/:UserProfileImage/:userId', profileImageChange);
-router.put('/Follow', Follow)
-router.put('/UnFollow', UnFollow);
+router.put('/Follow',userAuth, Follow)
+router.put('/UnFollow',userAuth, UnFollow);
 
 // PostCreation 
 router.post('/PostCreation',userAuth, AddPost)
 router.post('/SavingPosts/:userId/:PostId',userAuth, SavingPosts)
 router.post('/DeletePost/:PostId',userAuth, DeletingPost);
 router.post('/DaleteSavedPost/:PostId',userAuth, DaleteSavedPost)
-router.post('/EditUSerPost/:PostId', EditUSerPost);
+router.post('/EditUSerPost/:PostId',userAuth, EditUSerPost);
 router.post('/Postslike/:PostId',userAuth, Postslike);
 router.post('/AddCommentOnPost/:PostId',userAuth, AddCommentOnPost);
 router.post('/selectedHashtags', selectedHashtags);
