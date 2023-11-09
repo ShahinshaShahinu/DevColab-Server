@@ -4,7 +4,7 @@ import adminRouter from './src/interfaces/Routes/adminRouter'
 import bodyParser from "body-parser";
 import { db } from "./src/infra/database/dbConfig";
 import cookieParser from 'cookie-parser';
-import session, { CookieOptions } from "express-session"
+import session, { CookieOptions, MemoryStore } from "express-session"
 import dotenv from 'dotenv';
 
 import http from "http";
@@ -27,8 +27,20 @@ app.use(cookieParser());
 
 
 
-const expirationTime = new Date(Date.now() + 60000);
-app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
+// const expirationTime = new Date(Date.now() + 60000);
+// app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
+
+app.use(
+  session({
+    secret: 'your-secret-key', // replace with a strong secret
+    resave: false, // set to false to avoid the deprecated warning
+    saveUninitialized: true, // set to true or false based on your needs
+    store: new MemoryStore({
+      checkPeriod: 86400000, // prune expired entries every 24h
+    } as any), // Cast MemoryStore options to any type
+  })
+);
+
 
 
 db();
