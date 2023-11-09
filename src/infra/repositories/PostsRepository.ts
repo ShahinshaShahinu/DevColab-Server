@@ -81,7 +81,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
       }).populate({
         path: 'likes.LikedUsers.userId',
         model: userModel
-      }).limit(1);
+      });
 
       return posts.map((postUser) => postUser.toObject());
     } catch (error) {
