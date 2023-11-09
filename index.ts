@@ -25,7 +25,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
-
+db();
 
 // const expirationTime = new Date(Date.now() + 60000);
 // app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
@@ -52,7 +52,7 @@ app.use(
 
 
 
-db();
+
 
 declare module 'express-session' {
   interface SessionData {

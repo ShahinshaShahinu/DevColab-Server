@@ -18,6 +18,7 @@ dotenv_1.default.config();
 app.use(body_parser_1.default.json({ limit: '50mb' }));
 app.use(body_parser_1.default.urlencoded({ limit: '50mb', extended: true }));
 app.use((0, cookie_parser_1.default)());
+(0, dbConfig_1.db)();
 // const expirationTime = new Date(Date.now() + 60000);
 // app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
 // Create a new instance of MongoDBStore
@@ -34,7 +35,6 @@ app.use((0, express_session_1.default)({
     saveUninitialized: true,
     store: store,
 }));
-(0, dbConfig_1.db)();
 const port = 3000;
 const server = app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
