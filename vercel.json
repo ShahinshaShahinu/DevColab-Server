@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "buildCommand": "npm build",
+    "devCommand": "npm run dev",
+    "outputDirectory": "dist",
+    "builds": [
+      {
+        "src": "./index.ts",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "index.ts"
+      }
+    ]
+  }
