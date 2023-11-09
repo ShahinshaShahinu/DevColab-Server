@@ -14,7 +14,7 @@ import { Server } from "socket.io";
 import { Socket } from "dgram";
 import { userAuth } from "./src/interfaces/MiddleWares/userAuth";
 
-
+import MongoDBStore from 'connect-mongodb-session';
 
 
 const app = express();
@@ -30,16 +30,25 @@ app.use(cookieParser());
 // const expirationTime = new Date(Date.now() + 60000);
 // app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
 
+// Create a new instance of MongoDBStore
+const store = new (MongoDBStore(session))({
+  uri: 'mongodb+srv://muhammedshahinsha2442:shahinu123@cluster0.zwxzxre.mongodb.net/DevColab', // replace with your MongoDB URI
+  collection: 'Posts',
+});
+
+store.on('error', function (error: any) {
+  console.error('Session store error:', error);
+});
+
 app.use(
   session({
-    secret: 'your-secret-key', // replace with a strong secret
-    resave: false, // set to false to avoid the deprecated warning
-    saveUninitialized: true, // set to true or false based on your needs
-    store: new MemoryStore({
-      checkPeriod: 86400000, // prune expired entries every 24h
-    } as any), // Cast MemoryStore options to any type
+    secret: 'Key', // replace with a strong secret
+    resave: false,
+    saveUninitialized: true,
+    store: store, 
   })
 );
+
 
 
 

@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -32,9 +9,10 @@ const adminRouter_1 = __importDefault(require("./src/interfaces/Routes/adminRout
 const body_parser_1 = __importDefault(require("body-parser"));
 const dbConfig_1 = require("./src/infra/database/dbConfig");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
-const express_session_1 = __importStar(require("express-session"));
+const express_session_1 = __importDefault(require("express-session"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const socket_io_1 = require("socket.io");
+const connect_mongodb_session_1 = __importDefault(require("connect-mongodb-session"));
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 app.use(body_parser_1.default.json({ limit: '50mb' }));
@@ -42,13 +20,19 @@ app.use(body_parser_1.default.urlencoded({ limit: '50mb', extended: true }));
 app.use((0, cookie_parser_1.default)());
 // const expirationTime = new Date(Date.now() + 60000);
 // app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
+// Create a new instance of MongoDBStore
+const store = new ((0, connect_mongodb_session_1.default)(express_session_1.default))({
+    uri: 'mongodb+srv://muhammedshahinsha2442:shahinu123@cluster0.zwxzxre.mongodb.net/DevColab',
+    collection: 'Posts',
+});
+store.on('error', function (error) {
+    console.error('Session store error:', error);
+});
 app.use((0, express_session_1.default)({
-    secret: 'your-secret-key',
+    secret: 'Key',
     resave: false,
     saveUninitialized: true,
-    store: new express_session_1.MemoryStore({
-        checkPeriod: 86400000, // prune expired entries every 24h
-    }), // Cast MemoryStore options to any type
+    store: store,
 }));
 (0, dbConfig_1.db)();
 const port = 3000;
