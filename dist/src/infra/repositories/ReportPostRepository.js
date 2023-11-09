@@ -38,7 +38,6 @@ const ReportPostRepositoryImpl = (ReportPostsModel) => {
     });
     const find = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            // const FindReportPost = await ReportPostModel.find().populate('userId').populate('PostId');
             const FindReportPost = yield ReportPostModel_1.ReportPostModel.find().populate('userId').populate({
                 path: 'PostId',
                 populate: {
@@ -61,11 +60,15 @@ const ReportPostRepositoryImpl = (ReportPostsModel) => {
         const deletReportPost = yield ReportPostModel_1.ReportPostModel.deleteOne({ PostId: PostId });
         return deletReportPost;
     });
+    const ClearReportPost = () => __awaiter(void 0, void 0, void 0, function* () {
+        const deletReportPost = yield ReportPostModel_1.ReportPostModel.deleteMany();
+        return deletReportPost;
+    });
     return {
         ReportPostSave,
         find,
         UpdatePostStatus,
-        deleteReportPost
+        deleteReportPost, ClearReportPost
     };
 };
 exports.ReportPostRepositoryImpl = ReportPostRepositoryImpl;

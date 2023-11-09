@@ -54,8 +54,12 @@ io.on("connection", (socket) => {
         socket.join(room);
         io.to(socket.id).emit("room:join", data);
     });
+    let answerOFFer;
+    let TTo;
     socket.on("user:call", ({ to, offer }) => {
-        console.log('call accepted to --', to, 'offer --', offer);
+        // console.log('call accepted to --', to, 'offer --', offer);
+        answerOFFer = offer;
+        TTo = to;
         io.to(to).emit("incomming:call", { from: socket.id, offer });
     });
     socket.on("call:accepted", ({ to, ans }) => {
@@ -67,6 +71,14 @@ io.on("connection", (socket) => {
     socket.on("peer:nego:done", ({ to, ans }) => {
         io.to(to).emit("peer:nego:final", { from: socket.id, ans });
     });
+    socket.on('changeCamera', (data, Id) => {
+        console.log(data, Id, 'ddddddddddd');
+        io.emit('changeCamera', data, Id);
+    });
+    // socket.on("VideoAudio",(data)=>{
+    //   console.log(data,'vvvvvvvvvvvvvvvvvvvvv', socket.id, answerOFFer);
+    //   io.emit("VideoAudio", { from: socket.id, answerOFFer });
+    // })
 });
 var cors = require("cors");
 app.use(cors({

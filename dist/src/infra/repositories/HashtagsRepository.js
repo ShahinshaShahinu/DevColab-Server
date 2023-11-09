@@ -18,8 +18,8 @@ const HashtagRepositoryImpl = (HashtagModel) => {
     });
     const find = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const allHashTags = yield HashtagModel.find();
-            return allHashTags.map((tag) => tag.toObject());
+            const allHashTags = yield (HashtagModel === null || HashtagModel === void 0 ? void 0 : HashtagModel.find());
+            return allHashTags === null || allHashTags === void 0 ? void 0 : allHashTags.map((tag) => tag === null || tag === void 0 ? void 0 : tag.toObject());
         }
         catch (error) {
             console.error('An error occurred:', error);

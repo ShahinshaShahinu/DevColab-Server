@@ -13,7 +13,7 @@ const userAuth = (req, res, next) => {
             const accKey = process.env.JWT_ACTOKEN;
             console.log('accKey:', accKey);
             const decoded = jsonwebtoken_1.default.verify(token, accKey, { algorithms: ['HS256'] });
-            console.log('Decoded Token:User', decoded);
+            // console.log('Decoded Token:User', decoded);
             if (decoded.exp) {
                 const currentTimestamp = Math.floor(Date.now() / 1000);
                 if (currentTimestamp > decoded.exp) {
@@ -33,7 +33,7 @@ const userAuth = (req, res, next) => {
         }
     }
     catch (error) {
-        // console.error("Token verification failed:", error);
+        console.error("Token verification failed:", error);
         return res.status(401).json({ error: "Invalid token." });
     }
 };

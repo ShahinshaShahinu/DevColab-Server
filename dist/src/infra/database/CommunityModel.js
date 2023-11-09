@@ -43,7 +43,6 @@ const CommunitySchema = new mongoose_1.Schema({
     Message: [{
             text: {
                 type: String,
-                required: true,
             },
             senderId: {
                 type: String,

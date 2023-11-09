@@ -132,6 +132,7 @@ const EditUSerPost = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     var _c;
     try {
         const PostId = (_c = req === null || req === void 0 ? void 0 : req.params) === null || _c === void 0 ? void 0 : _c.PostId;
+        console.log(PostId, '');
         const { Taitle, previewContent, cloudImgUrl, HashTag, uploadedVideoUrls } = req.body;
         const updated = yield (0, UpdatePosts_1.UpdateUserPost)(postRepository)(PostId, Taitle, previewContent, cloudImgUrl, HashTag, uploadedVideoUrls);
         if (updated) {
@@ -146,20 +147,25 @@ const Postslike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = (0, userAuth_1.getUserIdFromJWT)(req);
         const postId = req.params.PostId;
-        const UpdatedUserLIke = yield (0, UpdatePosts_1.UpdateLike)(postRepository)(postId, userId);
-        if (UpdatedUserLIke === 'liked') {
-            return res.status(200).json({ liked: true, message: 'Post like updated successfully' });
-        }
-        else if (UpdatedUserLIke === 'Unliked') {
-            return res.status(200).json({ liked: false, error: 'Post Unliked updated successfully' });
-        }
-        else {
-            return res.status(404).json({ err: true, error: 'Post not found' });
+        if (userId) {
+            const UpdatedUserLIke = yield (0, UpdatePosts_1.UpdateLike)(postRepository)(postId, userId);
+            if (UpdatedUserLIke === 'liked') {
+                return res.status(200).json({ liked: true, message: 'Post like updated successfully' });
+            }
+            else if (UpdatedUserLIke === 'Unliked') {
+                return res.status(200).json({ liked: false, error: 'Post Unliked updated successfully' });
+            }
         }
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, error: 'Server error' });
+        if (error.message === 'JWT expired') {
+            console.log('lll');
+            res.status(401).json({ success: false, error: 'Invalid token.' });
+        }
+        else {
+            res.status(500).json({ success: false, error: 'Server error' });
+        }
     }
 });
 exports.Postslike = Postslike;

@@ -85,6 +85,7 @@ const CommunityRepositoryIMPL = (communityModel) => {
         var _b, _c;
         try {
             const community = yield CommunityModel_1.CommunityModel.findById(CommunityId).exec();
+            console.log(community, 'communitycommunitycommunitycommunitycommunity');
             if (!community) {
                 console.error('Community not found');
                 return undefined;

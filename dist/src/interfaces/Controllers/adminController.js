@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DashbordDAta = exports.UnBlockReportedPost = exports.BlockReportedPost = exports.ReportManageMent = exports.DeleteHashTag = exports.HashTagManagement = exports.AddHashTag = exports.adminLogin = void 0;
+exports.clearAllReportPosts = exports.DashbordDAta = exports.UnBlockReportedPost = exports.BlockReportedPost = exports.ReportManageMent = exports.DeleteHashTag = exports.HashTagManagement = exports.AddHashTag = exports.adminLogin = void 0;
 const LoginAdmin_1 = require("../../app/admin/LoginAdmin");
 const adminRepositoru_1 = require("../../infra/repositories/adminRepositoru");
 const adminModel_1 = require("../../infra/database/adminModel");
@@ -23,7 +23,6 @@ const HashtagsModel_1 = require("../../infra/database/HashtagsModel");
 const Hashtag_1 = require("../../app/Hashtags/Hashtag");
 const SaveReportPost_1 = require("../../app/ReportPost/SaveReportPost");
 const ReportPostRepository_1 = require("../../infra/repositories/ReportPostRepository");
-const ReportPostModel_1 = require("../../infra/database/ReportPostModel");
 const mongodb_1 = require("mongodb");
 const userRepository_1 = require("../../infra/repositories/userRepository");
 const userModel_1 = require("../../infra/database/userModel");
@@ -33,6 +32,8 @@ const PostsModel_1 = require("../../infra/database/PostsModel");
 const Community_1 = require("../../app/Community/Community");
 const CommunityModel_1 = require("../../infra/database/CommunityModel");
 const CommunityRepository_1 = require("../../infra/repositories/CommunityRepository");
+const ReportPostModel_1 = require("../../infra/database/ReportPostModel");
+const SaveReportPost_2 = require("../../app/ReportPost/SaveReportPost");
 const db = adminModel_1.adminModel;
 const userdb = userModel_1.userModel;
 const adminRepository = (0, adminRepositoru_1.adminRepositoryImpl)(db);
@@ -40,6 +41,7 @@ const hashTagRepository = (0, HashtagsRepository_1.HashtagRepositoryImpl)(Hashta
 const ReportRepository = (0, ReportPostRepository_1.ReportPostRepositoryImpl)(ReportPostModel_1.ReportPostModel);
 const userRepository = (0, userRepository_1.UserRepositoryImpl)(userdb);
 const postRepository = (0, PostsRepository_1.PostRepositoryImpl)(PostsModel_1.PostModel);
+const ReportPost = (0, ReportPostRepository_1.ReportPostRepositoryImpl)(ReportPostModel_1.ReportPostModel);
 const communityRepository = (0, CommunityRepository_1.CommunityRepositoryIMPL)(CommunityModel_1.CommunityModel);
 const adminLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
@@ -149,3 +151,17 @@ const DashbordDAta = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.DashbordDAta = DashbordDAta;
+const clearAllReportPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log('llllllllllllllllllllllllllllll');
+        const cleared = yield (0, SaveReportPost_2.DeleteAllReportPosts)(ReportPost)();
+        console.log(cleared, 'cllll');
+        if (cleared)
+            res.json(true);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+exports.clearAllReportPosts = clearAllReportPosts;

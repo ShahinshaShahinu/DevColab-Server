@@ -113,7 +113,8 @@ exports.SendCommunityMessage = SendCommunityMessage;
 const JoinCommunity = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const JoinUser = (0, userAuth_1.getUserIdFromJWT)(req);
-        const { communityId } = req.body;
+        const { communityId } = req === null || req === void 0 ? void 0 : req.body;
+        console.log(communityId, 'ccccc');
         const data = yield (0, Community_1.JoinUserToCommunity)(communityRepository)(JoinUser, communityId);
         res.json(data);
     }

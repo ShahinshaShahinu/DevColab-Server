@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userFollowers = exports.UnFollow = exports.Follow = exports.DeletNotification = exports.ReadedNotification = exports.getNotification = exports.sendChatsNotification = exports.sendNotification = exports.RecomendedPost = exports.PostsView = exports.GetUsers = exports.ReportPost = exports.selectedHashtags = exports.Usera = exports.profileImageChange = exports.BGimgUrlUpdate = exports.GetUserData = exports.GetUserProfile = exports.UpdateProfile = exports.BloackUser = exports.UnBloackUser = exports.UserManagement = exports.auth = exports.UserProfile = exports.User = exports.UpdatePassWord = exports.verificationToken = exports.ForgotPasswordEmailVerify = exports.Login = exports.Signup = void 0;
+exports.HashTagManagement = exports.userFollowers = exports.UnFollow = exports.Follow = exports.DeletNotification = exports.ReadedNotification = exports.getNotification = exports.sendChatsNotification = exports.sendNotification = exports.RecomendedPost = exports.PostsView = exports.GetUsers = exports.ReportPost = exports.selectedHashtags = exports.Usera = exports.profileImageChange = exports.BGimgUrlUpdate = exports.GetUserData = exports.GetUserProfile = exports.UpdateProfile = exports.BloackUser = exports.UnBloackUser = exports.UserManagement = exports.auth = exports.UserProfile = exports.User = exports.UpdatePassWord = exports.verificationToken = exports.ForgotPasswordEmailVerify = exports.Login = exports.Signup = void 0;
 const userModel_1 = require("../../infra/database/userModel");
 const userRepository_1 = require("../../infra/repositories/userRepository");
 const SignupUser_1 = require("../../app/user/SignupUser"); // app User
@@ -38,12 +38,16 @@ const NotificationRepository_1 = require("../../infra/repositories/NotificationR
 const Followers_1 = require("../../app/user/Followers");
 const FollowersRepository_1 = require("../../infra/repositories/FollowersRepository");
 const UsersFollowersModel_1 = require("../../infra/database/UsersFollowersModel");
+const Hashtag_1 = require("../../app/Hashtags/Hashtag");
+const HashtagsRepository_1 = require("../../infra/repositories/HashtagsRepository");
+const HashtagsModel_1 = require("../../infra/database/HashtagsModel");
 const db = userModel_1.userModel; // Instantiate MongoDB connection
 const userRepository = (0, userRepository_1.UserRepositoryImpl)(db);
 const postRepository = (0, PostsRepository_1.PostRepositoryImpl)(PostsModel_1.PostModel);
 const ReportRepository = (0, ReportPostRepository_1.ReportPostRepositoryImpl)(ReportPostModel_1.ReportPostModel);
 const NotifyRepository = (0, NotificationRepository_1.NotificationRepositoryImpl)(NotificationModel_1.NotificationModel);
 const folowersRepositiory = (0, FollowersRepository_1.FollowersRepositoryImpl)(UsersFollowersModel_1.FollowersModel);
+const hashTagRepository = (0, HashtagsRepository_1.HashtagRepositoryImpl)(HashtagsModel_1.HashtagModel);
 const Signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { UserName, email, password, isGoogle, profileImg } = req.body;
@@ -285,6 +289,7 @@ const GetUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.json({ userProfileData, UserPosts, count });
     }
     catch (error) {
+        console.log(error, 'getuser');
     }
 });
 exports.GetUserProfile = GetUserProfile;
@@ -410,9 +415,7 @@ const sendChatsNotification = (req, res) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { ChatMessage, senderId } = req.body;
         const userId = (0, userAuth_1.getUserIdFromJWT)(req);
-        console.log(userId, '--userid', senderId, '--senderId');
         const InsertNotification = yield (0, NotifiCation_1.CreateChatNotification)(NotifyRepository)(ChatMessage, senderId, userId);
-        console.log('ChatNOtificaion inserted', InsertNotification);
     }
     catch (error) {
     }
@@ -455,9 +458,11 @@ const Follow = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = (0, userAuth_1.getUserIdFromJWT)(req);
         const { FollowId } = req.body;
-        const Followed = yield (0, Followers_1.Following)(folowersRepositiory)(userId, FollowId);
-        if (Followed) {
-            res.json(Followed);
+        if (userId) {
+            const Followed = yield (0, Followers_1.Following)(folowersRepositiory)(userId, FollowId);
+            if (Followed) {
+                res.json(Followed);
+            }
         }
     }
     catch (error) {
@@ -489,3 +494,14 @@ const userFollowers = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.userFollowers = userFollowers;
+const HashTagManagement = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const AllHashTags = yield (0, Hashtag_1.GetHashTags)(hashTagRepository)();
+        if (AllHashTags) {
+            res.json(AllHashTags);
+        }
+    }
+    catch (error) {
+    }
+});
+exports.HashTagManagement = HashTagManagement;

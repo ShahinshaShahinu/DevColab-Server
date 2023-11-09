@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DelteRepportPost = exports.ReportPostStatus = exports.FindReportPost = exports.InsertReportPost = void 0;
+exports.DeleteAllReportPosts = exports.DelteRepportPost = exports.ReportPostStatus = exports.FindReportPost = exports.InsertReportPost = void 0;
 // This is how ReportPosts might be defined
 // Your InsertReportPost function
 const InsertReportPost = (reportRepository) => (userId, PostId, ReportReason, ReportDate) => __awaiter(void 0, void 0, void 0, function* () {
@@ -58,3 +58,13 @@ const DelteRepportPost = (reportRepository) => (PostId) => __awaiter(void 0, voi
     }
 });
 exports.DelteRepportPost = DelteRepportPost;
+const DeleteAllReportPosts = (reportRepository) => () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const cleared = yield reportRepository.ClearReportPost();
+        return cleared;
+    }
+    catch (error) {
+        // Handle errors here
+    }
+});
+exports.DeleteAllReportPosts = DeleteAllReportPosts;
