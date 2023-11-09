@@ -58,7 +58,7 @@ const PostRepositoryImpl = (PostModel) => {
             }).populate({
                 path: 'likes.LikedUsers.userId',
                 model: userModel_1.userModel
-            }).limit(1);
+            });
             return posts.map((postUser) => postUser.toObject());
         }
         catch (error) {
