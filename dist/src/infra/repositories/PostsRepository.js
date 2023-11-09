@@ -48,7 +48,7 @@ const PostRepositoryImpl = (PostModel) => {
     });
     const find = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const posts = yield PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).populate({
+            const posts = yield PostModel.find({ status: true }).select('-content').populate('userId').sort({ _id: -1 }).populate({
                 path: 'Comments',
                 options: { sort: { _id: -1 } },
                 populate: {
