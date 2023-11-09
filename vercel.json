@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "devCommand": "npm run dev",
   "builds": [
       {
           "src": "dist/index.js",
@@ -12,5 +13,6 @@
           "src": "/(.*)",
           "dest": "dist/index.js"
       }
-  ]
+  ]   
+  
 }
