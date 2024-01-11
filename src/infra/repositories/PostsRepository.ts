@@ -71,7 +71,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
 
   const find = async (): Promise<Posts[]> => {
     try {
-      const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).populate({
+      const posts = await PostModel.find({ status: true }).limit(1).populate('userId').sort({ _id: -1 }).populate({
         path: 'Comments',
         options: { sort: { _id: -1 } },
         populate: {
