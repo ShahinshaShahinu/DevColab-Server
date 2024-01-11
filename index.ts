@@ -76,6 +76,9 @@ const io = new Server(server, {
   },                        
 });    
 
+console.log('io --',process.env.BASE_URL_ORIGIN);
+
+
 const emailToSocketIdMap = new Map();
 const socketidToEmailMap = new Map();
 io.on("connection", (socket) => {
