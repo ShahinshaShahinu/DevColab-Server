@@ -141,8 +141,7 @@ export const DaleteSavedPost = async (req: Request, res: Response) => {
 
 export const HomePosts = async (req: Request, res: Response) => {
     try {
-        console.log(req.query , 'hompesdd ddd');
-        
+
         const PageNumber=req.query.selectedPage ? req.query.selectedPage : 1 ;
         const pageSize=4
 
