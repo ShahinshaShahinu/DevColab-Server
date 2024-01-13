@@ -78,7 +78,7 @@ console.log('pagesiZe--' ,pageSize ,'PageNumber ---',PageNumber);
       const totalPages = Math.ceil(totalCount / pageSize) ; 
 
       const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
-        skip((PageNumber - 1) * pageSize).limit(pageSize).
+        skip((PageNumber - 1) * pageSize).limit(1).
         populate({
           path: 'Comments',
           options: { sort: { _id: -1 } },
