@@ -12,8 +12,8 @@ import { userModel } from '../database/userModel';
 
 export type PostRepository = {
   create: (post: Posts) => Promise<Posts>,
-  findPosts: (userId: string) => Promise<Posts[] |undefined>,
-  find: () => Promise<Posts[]>,
+  findPosts: (userId: string) => Promise<Posts[] | undefined>,
+  find: (PageNumber: number, pageSize: number) => Promise<{posts:Posts[]  , totalPages:number}>,
   DeletePost: (PostId: string) => Promise<object | null | undefined>,
   UpdatePost: (PostId: string, title: string, content: string, image: string, HashTag: string[], uploadedVideoUrls: string[]) => Promise<UpdateWriteOpResult | undefined>
   UpdatePostLike: (PostId: string, userId: string) => Promise<string | string | undefined>
@@ -21,7 +21,7 @@ export type PostRepository = {
   findPost: (PostId: string) => Promise<Posts | null | undefined>,
   DeleteVideo: (index: number, PostId: string) => Promise<UpdateWriteOpResult | number>,
   CreatedPostDAte: () => Promise<{ month: string; count: number }[] | undefined>
-  DeletepostHashtag: (PostId: string, hashtagTag: string) => Promise<UpdateWriteOpResult | null> 
+  DeletepostHashtag: (PostId: string, hashtagTag: string) => Promise<UpdateWriteOpResult | null>
 }
 
 export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
@@ -36,10 +36,10 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     try {
       const posts = await PostModel.find({ userId: userId }).populate('userId').sort({ _id: -1 });
 
-      
-      
+
+
       return posts.map((postUser) => postUser?.toObject());
-      
+
     } catch (error) {
       // const mappedPosts: Posts[] = posts.map(post => ({
       //   _id: post._id,
@@ -50,7 +50,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
       //   HashTag: post.HashTag,
       //   Videos: post?.Videos,
       //   status: post?.status,
-        
+
       // }));
       console.log(error, 'eerer');
     }
@@ -69,25 +69,31 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
   }
 
 
-  const find = async (): Promise<Posts[]> => {
+  const find = async (PageNumber: number, pageSize: number): Promise<{posts:Posts[]  , totalPages:number}> => {
     try {
-      console.log('home posts finding');
-      
-      const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).populate({
-        path: 'Comments',
-        options: { sort: { _id: -1 } },
-        populate: {
-          path: 'userId',
+
+      const totalCount = await PostModel.countDocuments({ status: true });
+
+      const totalPages = Math.ceil(totalCount / pageSize);
+
+      const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
+        skip((PageNumber - 1) * pageSize).limit(pageSize).
+        populate({
+          path: 'Comments',
+          options: { sort: { _id: -1 } },
+          populate: {
+            path: 'userId',
+            model: userModel
+          }
+        }).populate({
+          path: 'likes.LikedUsers.userId',
           model: userModel
-        }
-      }).populate({
-        path: 'likes.LikedUsers.userId',
-        model: userModel
-      })
+        })
+
+
+      return {posts : posts.map((postUser) => postUser.toObject()) , totalPages }
 
       
-
-      return posts.map((postUser) => postUser.toObject());
     } catch (error) {
       console.log(error, 'erere');
       throw error;

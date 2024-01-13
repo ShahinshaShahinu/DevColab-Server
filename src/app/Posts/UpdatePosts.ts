@@ -20,8 +20,8 @@ export const DeleteUserPost = (postRepository: PostRepository) => async (PostId:
 
 }
 
-export const GetHomePosts = (postRepository: PostRepository) => async (): Promise<Posts[]> => {
-    const posts = await postRepository.find();
+export const GetHomePosts = (postRepository: PostRepository) => async (PageNumber: any,pageSize: number): Promise<{posts:Posts[]  , totalPages:number}> => {
+    const posts = await postRepository.find(PageNumber,pageSize);
     return posts
 }
 

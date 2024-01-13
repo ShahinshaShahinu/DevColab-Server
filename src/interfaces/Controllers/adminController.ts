@@ -165,13 +165,16 @@ export const UnBlockReportedPost = async (req: Request, res: Response) => {
 
 export const DashbordDAta = async (req: Request, res: Response) => {
     try {
-        const HomePosts = await GetHomePosts(postRepository)();
+        const PageNumber=1 ;
+        const pageSize=4
+        const {posts,totalPages} = await GetHomePosts(postRepository)(PageNumber,pageSize);
         const AllCommunity = await findAllCommunity(communityRepository)()
         const Users = await UserDatas(userRepository)();
         const AllUserMonths = await UsersJoined(userRepository)();
         const TotalUsers = Users?.length;
-        const TotalPosts = HomePosts?.length;
+        const TotalPosts = posts?.length;
         const AllPosts = await PostCreatedDAte(postRepository)();
+console.log('totalPages -- >',totalPages);
 
         const TotalCommunities = AllCommunity?.length;
         if (Users) {
