@@ -147,7 +147,7 @@ export const HomePosts = async (req: Request, res: Response) => {
 
         const HomePosts = await GetHomePosts(postRepository)(PageNumber,pageSize);
 
-        if (HomePosts) res.json(HomePosts)
+        if (HomePosts) res.json({  totalPages: 5 ,posts: [] })
 
     } catch (error) {
         console.log(error, 'HomePosts');
