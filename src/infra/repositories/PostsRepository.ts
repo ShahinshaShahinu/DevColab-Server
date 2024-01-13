@@ -90,8 +90,9 @@ console.log('pagesiZe--' ,pageSize ,'PageNumber ---',PageNumber);
           path: 'likes.LikedUsers.userId',
           model: userModel
         })
-console.log(posts.length ,'--posts length');
+console.log(posts.length ,'--posts lengt');
 
+console.log(posts.map((postUser) => postUser.toObject())  ,'posts.map((postUser) => postUser.toObject()) ');
 
       return {posts : posts.map((postUser) => postUser.toObject()) , totalPages:totalPages }
 
