@@ -71,10 +71,11 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
 
   const find = async (PageNumber: number, pageSize: number): Promise<{posts:Posts[]  , totalPages:number}> => {
     try {
+console.log('pagesiZe--' ,pageSize ,'PageNumber ---',PageNumber);
 
       const totalCount = await PostModel.countDocuments({ status: true });
 
-      const totalPages = Math.ceil(totalCount / pageSize);
+      const totalPages = Math.ceil(totalCount / pageSize) ; 
 
       const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
         skip((PageNumber - 1) * pageSize).limit(pageSize).
@@ -89,9 +90,10 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
           path: 'likes.LikedUsers.userId',
           model: userModel
         })
+console.log(posts.length ,'--posts length');
 
 
-      return {posts : posts.map((postUser) => postUser.toObject()) , totalPages }
+      return {posts : posts.map((postUser) => postUser.toObject()) , totalPages:totalPages }
 
       
     } catch (error) {
