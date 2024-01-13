@@ -96,7 +96,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
       // Map the posts to plain JavaScript objects before returning
       const mappedPosts = posts.map((postUser) => postUser.toObject());
 
-      return {  totalPages: 5 ,posts: 'mappedPosts' };
+      return {  totalPages: 5 ,posts: [] };
 
 
 
