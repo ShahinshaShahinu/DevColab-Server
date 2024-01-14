@@ -123,7 +123,7 @@ const HomePosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const pageSize = 4;
         const HomePosts = yield (0, UpdatePosts_1.GetHomePosts)(postRepository)(PageNumber, pageSize);
         if (HomePosts)
-            res.json({ totalPages: 5, posts: [] });
+            res.json(HomePosts);
     }
     catch (error) {
         console.log(error, 'HomePosts');
