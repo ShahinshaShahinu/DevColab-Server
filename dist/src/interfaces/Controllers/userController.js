@@ -55,7 +55,6 @@ const Signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const Exist = yield userRepository.findByEmail(email);
         console.log(Exist, "exist");
         if (Exist) {
-            console.log(Exist, "edaa");
             res.json({ message: "Email already exist, Please Login Now" });
         }
         else {

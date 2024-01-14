@@ -63,7 +63,6 @@ export const Signup = async (req: Request, res: Response) => {
     console.log(Exist, "exist");
 
     if (Exist) {
-      console.log(Exist, "edaa");
 
       res.json({ message: "Email already exist, Please Login Now" });
     } else {
