@@ -12,7 +12,7 @@ const router = Router()
 
 router.get('/profile/:userId',userAuth, GetUserProfile)
 router.get('/SavedPosts/:userId', FindUserSavedPosts)
-router.get('/k', HomePosts);
+router.get('/kHome', HomePosts);
 router.get('/UserSaveds',userAuth, UserSavedPosts);
 router.get('/GetUsers', GetUsers);
 router.get('/UserPostsView/:postId', PostsView);
