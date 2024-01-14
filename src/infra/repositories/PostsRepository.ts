@@ -73,28 +73,28 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     try {
       console.log('pagesiZe--', pageSize, 'PageNumber ---', PageNumber);
 
-      const totalCount = await PostModel.countDocuments({ status: true });
+      // const totalCount = await PostModel.countDocuments({ status: true });
 
-      const totalPages = Math.ceil(totalCount / pageSize);
+      // const totalPages = Math.ceil(totalCount / pageSize);
 
-      const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
-        skip((PageNumber - 1) * pageSize).limit(1).
-        populate({
-          path: 'Comments',
-          options: { sort: { _id: -1 } },
-          populate: {
-            path: 'userId',
-            model: userModel
-          }
-        }).populate({
-          path: 'likes.LikedUsers.userId',
-          model: userModel
-        });
+      // const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
+      //   skip((PageNumber - 1) * pageSize).limit(1).
+      //   populate({
+      //     path: 'Comments',
+      //     options: { sort: { _id: -1 } },
+      //     populate: {
+      //       path: 'userId',
+      //       model: userModel
+      //     }
+      //   }).populate({
+      //     path: 'likes.LikedUsers.userId',
+      //     model: userModel
+      //   });
 
-        console.log(posts.length, '--posts length');
+      //   console.log(posts.length, '--posts length');
 
-      // Map the posts to plain JavaScript objects before returning
-      const mappedPosts = posts.map((postUser) => postUser.toObject());
+      // // Map the posts to plain JavaScript objects before returning
+      // const mappedPosts = posts.map((postUser) => postUser.toObject());
 
       return {  totalPages: 5 ,posts: [] };
 
