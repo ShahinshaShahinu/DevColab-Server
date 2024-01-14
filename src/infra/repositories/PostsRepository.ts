@@ -13,7 +13,7 @@ import { userModel } from '../database/userModel';
 export type PostRepository = {
   create: (post: Posts) => Promise<Posts>,
   findPosts: (userId: string) => Promise<Posts[] | undefined>,
-  find: (PageNumber: number, pageSize: number) => Promise<{ posts: Posts[], totalPages: number }>,
+  find: (PageNumber: number, pageSize: number) => Promise<{posts:Posts[]  , totalPages:number}>,
   DeletePost: (PostId: string) => Promise<object | null | undefined>,
   UpdatePost: (PostId: string, title: string, content: string, image: string, HashTag: string[], uploadedVideoUrls: string[]) => Promise<UpdateWriteOpResult | undefined>
   UpdatePostLike: (PostId: string, userId: string) => Promise<string | string | undefined>
@@ -69,37 +69,31 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
   }
 
 
-  const find = async (PageNumber: number, pageSize: number): Promise<{ posts: Posts[], totalPages: number }> => {
+  const find = async (PageNumber: number, pageSize: number): Promise<{posts:Posts[]  , totalPages:number}> => {
     try {
-      console.log('pagesiZe--', pageSize, 'PageNumber ---', PageNumber);
 
-      // const totalCount = await PostModel.countDocuments({ status: true });
+      const totalCount = await PostModel.countDocuments({ status: true });
 
-      // const totalPages = Math.ceil(totalCount / pageSize);
+      const totalPages = Math.ceil(totalCount / pageSize);
 
-      // const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
-      //   skip((PageNumber - 1) * pageSize).limit(1).
-      //   populate({
-      //     path: 'Comments',
-      //     options: { sort: { _id: -1 } },
-      //     populate: {
-      //       path: 'userId',
-      //       model: userModel
-      //     }
-      //   }).populate({
-      //     path: 'likes.LikedUsers.userId',
-      //     model: userModel
-      //   });
-
-      //   console.log(posts.length, '--posts length');
-
-      // // Map the posts to plain JavaScript objects before returning
-      // const mappedPosts = posts.map((postUser) => postUser.toObject());
-
-      return {  totalPages: 5 ,posts: [] };
+      const posts = await PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
+        skip((PageNumber - 1) * pageSize).limit(pageSize).
+        populate({
+          path: 'Comments',
+          options: { sort: { _id: -1 } },
+          populate: {
+            path: 'userId',
+            model: userModel
+          }
+        }).populate({
+          path: 'likes.LikedUsers.userId',
+          model: userModel
+        })
 
 
+      return {posts : posts.map((postUser) => postUser.toObject()) , totalPages:totalPages }
 
+      
     } catch (error) {
       console.log(error, 'erere');
       throw error;

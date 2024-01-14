@@ -21,8 +21,8 @@ const DeleteUserPost = (postRepository) => (PostId) => __awaiter(void 0, void 0,
     return DeletePosts;
 });
 exports.DeleteUserPost = DeleteUserPost;
-const GetHomePosts = (postRepository) => () => __awaiter(void 0, void 0, void 0, function* () {
-    const posts = yield postRepository.find();
+const GetHomePosts = (postRepository) => (PageNumber, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
+    const posts = yield postRepository.find(PageNumber, pageSize);
     return posts;
 });
 exports.GetHomePosts = GetHomePosts;

@@ -46,9 +46,13 @@ const PostRepositoryImpl = (PostModel) => {
             console.log(error);
         }
     });
-    const find = () => __awaiter(void 0, void 0, void 0, function* () {
+    const find = (PageNumber, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const posts = yield PostModel.find({ status: true }).select('-content').populate('userId').sort({ _id: -1 }).populate({
+            const totalCount = yield PostModel.countDocuments({ status: true });
+            const totalPages = Math.ceil(totalCount / pageSize);
+            const posts = yield PostModel.find({ status: true }).populate('userId').sort({ _id: -1 }).
+                skip((PageNumber - 1) * pageSize).limit(pageSize).
+                populate({
                 path: 'Comments',
                 options: { sort: { _id: -1 } },
                 populate: {
@@ -59,7 +63,7 @@ const PostRepositoryImpl = (PostModel) => {
                 path: 'likes.LikedUsers.userId',
                 model: userModel_1.userModel
             });
-            return posts.map((postUser) => postUser.toObject());
+            return { posts: posts.map((postUser) => postUser.toObject()), totalPages: totalPages };
         }
         catch (error) {
             console.log(error, 'erere');

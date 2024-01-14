@@ -119,9 +119,11 @@ const DaleteSavedPost = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.DaleteSavedPost = DaleteSavedPost;
 const HomePosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const HomePosts = yield (0, UpdatePosts_1.GetHomePosts)(postRepository)();
+        const PageNumber = req.query.selectedPage ? req.query.selectedPage : 1;
+        const pageSize = 4;
+        const HomePosts = yield (0, UpdatePosts_1.GetHomePosts)(postRepository)(PageNumber, pageSize);
         if (HomePosts)
-            res.json(HomePosts);
+            res.json({ totalPages: 5, posts: [] });
     }
     catch (error) {
         console.log(error, 'HomePosts');

@@ -134,13 +134,16 @@ const UnBlockReportedPost = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.UnBlockReportedPost = UnBlockReportedPost;
 const DashbordDAta = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const HomePosts = yield (0, UpdatePosts_1.GetHomePosts)(postRepository)();
+        const PageNumber = 1;
+        const pageSize = 4;
+        const { posts, totalPages } = yield (0, UpdatePosts_1.GetHomePosts)(postRepository)(PageNumber, pageSize);
         const AllCommunity = yield (0, Community_1.findAllCommunity)(communityRepository)();
         const Users = yield (0, AdminGetUsers_1.UserDatas)(userRepository)();
         const AllUserMonths = yield (0, AdminGetUsers_1.UsersJoined)(userRepository)();
         const TotalUsers = Users === null || Users === void 0 ? void 0 : Users.length;
-        const TotalPosts = HomePosts === null || HomePosts === void 0 ? void 0 : HomePosts.length;
+        const TotalPosts = posts === null || posts === void 0 ? void 0 : posts.length;
         const AllPosts = yield (0, AdminGetUsers_1.PostCreatedDAte)(postRepository)();
+        console.log('totalPages -- >', totalPages);
         const TotalCommunities = AllCommunity === null || AllCommunity === void 0 ? void 0 : AllCommunity.length;
         if (Users) {
             res.json({ TotalUsers, TotalPosts, TotalCommunities, AllUserMonths, AllPosts });
