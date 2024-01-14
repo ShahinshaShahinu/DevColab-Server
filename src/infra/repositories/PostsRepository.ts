@@ -90,10 +90,8 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
           model: userModel
         })
 
-
       return {posts : posts.map((postUser) => postUser.toObject()) , totalPages:totalPages }
 
-      
     } catch (error) {
       console.log(error, 'erere');
       throw error;
