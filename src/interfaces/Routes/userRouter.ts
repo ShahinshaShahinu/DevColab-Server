@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { BGimgUrlUpdate, DeletNotification, Follow, ForgotPasswordEmailVerify, GetUserData, GetUserProfile, GetUsers, HashTagManagement, Login, PostsView, ReadedNotification, RecomendedPost, ReportPost, Signup, UnFollow, UpdatePassWord, UpdateProfile, User, Usera, auth, getNotification, profileImageChange, selectedHashtags, sendChatsNotification, sendNotification, userFollowers, verificationToken } from '../Controllers/userController';
-import { AddCommentOnPost, AddPost, DaleteSavedPost, DeleteHashtag, DeleteVideo, DeletingPost, EditComment, EditUSerPost, FindUserSavedPosts, HomePosts, Postslike, SavingPosts, UserSavedPosts } from "../Controllers/PostsController";
+import { AddCommentOnPost, AddPost, DaleteSavedPost, DeleteHashtag, DeleteVideo, DeletingPost, EditComment, EditUSerPost, FindUserSavedPosts, HomePosts, Postslike, SavingPosts, SearchPosts, UserSavedPosts } from "../Controllers/PostsController";
 import { getUserIdFromJWT, userAuth } from "../MiddleWares/userAuth";
 import { sendMessages, Chats, CreateCommunities, AlreadyexistingCommunity, Communities, SendCommunityMessage, RecomendedCommunities, JoinCommunity, RadedPersonalMessage } from '../Controllers/Chats CommunityControll';
 
@@ -13,6 +13,7 @@ const router = Router()
 router.get('/profile/:userId',userAuth, GetUserProfile)
 router.get('/SavedPosts/:userId', FindUserSavedPosts)
 router.get('/HomePosts', HomePosts);
+router.get('/SearchPosts', SearchPosts);
 router.get('/UserSaveds',userAuth, UserSavedPosts);
 router.get('/GetUsers', GetUsers);
 router.get('/UserPostsView/:postId', PostsView);

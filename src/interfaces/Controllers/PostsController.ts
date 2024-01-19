@@ -1,5 +1,5 @@
 import { CraetePost } from "../../app/Posts/Posts";
-import { DeletePosthashtags, DeleteUserPost, GetHomePosts, PostVideoDelete, UpdateComments, UpdateLike, UpdateUserPost, getPostinfo } from "../../app/Posts/UpdatePosts";
+import { DeletePosthashtags, DeleteUserPost, GetHomePosts, GetSearchPosts, PostVideoDelete, UpdateComments, UpdateLike, UpdateUserPost, getPostinfo } from "../../app/Posts/UpdatePosts";
 import { DeleteSavedPosts, SavePost, findSavedPost } from "../../app/SavingPost/SavePost";
 import { PostModel } from "../../infra/database/PostsModel";
 import { PostRepositoryImpl } from "../../infra/repositories/PostsRepository";
@@ -154,7 +154,18 @@ export const HomePosts = async (req: Request, res: Response) => {
     }
 }
 
+export const SearchPosts = async (req: Request, res: Response) => {
+    try {
 
+      
+        const HomePosts = await GetSearchPosts(postRepository)();
+
+        if (HomePosts) res.json(HomePosts)
+
+    } catch (error) { 
+        console.log(error, 'HomePosts');
+    }
+}
 
 export const EditUSerPost = async (req: Request, res: Response) => {
     try {

@@ -14,6 +14,7 @@ export type PostRepository = {
   create: (post: Posts) => Promise<Posts>,
   findPosts: (userId: string) => Promise<Posts[] | undefined>,
   find: (PageNumber: number, pageSize: number) => Promise<{ posts: Posts[], totalPages: number }>,
+  findSearchedPost:()=>Promise<Posts[]|undefined>
   DeletePost: (PostId: string) => Promise<object | null | undefined>,
   UpdatePost: (PostId: string, title: string, content: string, image: string, HashTag: string[], uploadedVideoUrls: string[]) => Promise<UpdateWriteOpResult | undefined>
   UpdatePostLike: (PostId: string, userId: string) => Promise<string | string | undefined>
@@ -97,6 +98,17 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     }
   };
 
+  const findSearchedPost =async ():Promise <Posts[] | undefined>=>{
+    try {
+      const posts = await PostModel.find({ status: true });
+
+      return posts
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
 
 
@@ -272,6 +284,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     create,
     findPosts,
     find,
+    findSearchedPost,
     DeletePost,
     UpdatePost,
     UpdatePostLike,

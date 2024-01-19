@@ -25,6 +25,10 @@ export const GetHomePosts = (postRepository: PostRepository) => async (PageNumbe
     return posts
 }
 
+export const GetSearchPosts = (postRepository: PostRepository) => async (): Promise<Posts[] | undefined> => {
+    const posts = await postRepository.findSearchedPost();
+    return posts
+}
 
 export const UpdateUserPost = (postRepository: PostRepository) => async (PostId: string, title: string, content: string, image: string ,HashTag:string[] ,uploadedVideoUrls:string[]): Promise<UpdateWriteOpResult | undefined> => {
     const updated = await postRepository.UpdatePost(PostId, title, content, image,HashTag,uploadedVideoUrls);
