@@ -66,10 +66,10 @@ const port = 3000;
 
 const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
-});
+}); 
 
 
-const io = new Server(server, {
+const io = new Server(server, { 
   cors: {
     origin:process.env.BASE_URL_ORIGIN ,
     credentials: true,
@@ -144,7 +144,7 @@ io.on("connection", (socket) => {
 
 var cors = require("cors");
 app.use(
-  cors({
+ cors({
     origin:process.env.BASE_URL_ORIGIN,
     methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
     credentials: true,

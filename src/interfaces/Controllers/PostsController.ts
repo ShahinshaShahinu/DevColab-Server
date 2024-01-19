@@ -149,7 +149,7 @@ export const HomePosts = async (req: Request, res: Response) => {
 
         if (HomePosts) res.json(HomePosts)
 
-    } catch (error) {
+    } catch (error) { 
         console.log(error, 'HomePosts');
     }
 }
