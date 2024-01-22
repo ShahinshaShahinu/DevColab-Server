@@ -102,6 +102,7 @@ io.on("connection", (socket) => {
 
   socket.on("room:join", (data) => {
     const { email, room } = data;
+    console.log(data, 'Join --da');
     
     emailToSocketIdMap.set(email, socket.id);
     socketidToEmailMap.set(socket.id, email);
