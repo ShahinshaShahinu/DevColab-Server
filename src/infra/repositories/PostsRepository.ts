@@ -89,7 +89,7 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
           path: 'likes.LikedUsers.userId',
           model: userModel
         })
-console.log(posts ,'----posts');
+
 
       return { posts: posts.map((postUser) => postUser.toObject()), totalPages: totalPages }
 
