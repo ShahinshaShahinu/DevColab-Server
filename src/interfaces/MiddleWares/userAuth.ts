@@ -17,11 +17,11 @@ export const userAuth: RequestHandler = (req: Request, res: Response, next: Next
     
       
       const token = req.headers.accesstoken as string;
-      console.log(token, 'tokentokentokentokentoken');
+      // console.log(token, 'tokentokentokentokentoken');
       
       if (token) {
         const accKey: Secret = process.env.JWT_ACTOKEN as Secret;
-        console.log('accKey:', accKey);
+        // console.log('accKey:', accKey);
   
         const decoded = jwt.verify(token, accKey, { algorithms: ['HS256'] }) as DecodedToken;
         // console.log('Decoded Token:User', decoded);
