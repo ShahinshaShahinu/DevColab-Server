@@ -99,9 +99,19 @@ export const PostRepositoryImpl = (PostModel: MongoDBPost): PostRepository => {
     }
   };
 
-  const findSearchedPost =async ():Promise <Posts[] | undefined>=>{
+  const findSearchedPost =async ():Promise <any[] | undefined>=>{
     try {
-      const posts = await PostModel.find({ status: true });
+      const posts = await PostModel.find({ status: true }).populate('userId').populate({
+        path: 'likes.LikedUsers.userId',
+        model: userModel
+      }).populate({
+        path: 'Comments',
+        options: { sort: { _id: -1 } },
+        populate: {
+          path: 'userId',
+          model: userModel
+        }
+      });
 
       return posts
 
