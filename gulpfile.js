@@ -9,10 +9,16 @@ gulp.task("scripts", function () {
   return tsProject.src().pipe(tsProject()).pipe(gulp.dest("dist/src"));
 });
 
-// Task to copy HTML and CSS files
+// Task to copy HTML, CSS, and image files
 gulp.task("copy-assets", function () {
   return gulp
-    .src(["src/**/*.html", "src/**/*.css"])
+    .src([
+      "src/**/*.html",
+      "src/**/*.css",
+      "src/**/*.png",
+      "src/**/*.jpg",
+      "src/**/*.jpeg",
+    ])
     .pipe(copy("dist/src", { prefix: 1 }));
 });
 
