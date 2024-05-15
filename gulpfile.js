@@ -6,7 +6,7 @@ const tsProject = ts.createProject("tsconfig.json");
 
 // Task to compile TypeScript files
 gulp.task("scripts", function () {
-  return tsProject.src().pipe(tsProject()).pipe(gulp.dest("dist/src"));
+  return tsProject.src().pipe(tsProject()).pipe(gulp.dest("dist"));
 });
 
 // Task to copy HTML, CSS, and image files
@@ -19,7 +19,7 @@ gulp.task("copy-assets", function () {
       "src/**/*.jpg",
       "src/**/*.jpeg",
     ])
-    .pipe(copy("dist/src", { prefix: 1 }));
+    .pipe(copy("dist", { prefix: 1 }));
 });
 
 // Default task to run both tasks in sequence
