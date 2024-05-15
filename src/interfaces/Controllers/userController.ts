@@ -160,7 +160,7 @@ export const ForgotPasswordEmailVerify = async (
         res.json({ verificationToken: response, userid: user._id });
       } catch (error) {
         console.log(error);
-      }
+      }     
     }
 
     res.json(obj);

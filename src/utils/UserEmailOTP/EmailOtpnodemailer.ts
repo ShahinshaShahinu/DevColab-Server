@@ -8,15 +8,17 @@ import juice from 'juice';
 console.log(process.env.MAILER_PASS);
 
 const transporter = nodemailer.createTransport({
-  
-  service: "Gmail",
+  service: "gmail",
   auth: {
     user: 'shahinshamsb79@gmail.com',
-    pass:'koxixycdqqarqdos'
-  }},
-  {from: 'DevColab'}
-  
-  );
+    pass: 'szcj xeec grer gcfp'
+  },
+  from: 'DevCollab <DevCollab@gmail.com>'
+});
+
+// hdns eqgz mmxd djga
+
+
   
 
 
@@ -26,6 +28,8 @@ export const EmailOtpSend = async (email: string) => {
 
 
   try {
+    console.log('sending email ................. ');
+
     const htmlContent = fs.readFileSync(path.resolve(__dirname, './EmailOtp.html'), 'utf8');
     const cssContent = fs.readFileSync(path.resolve(__dirname, './stylesheet.css'), 'utf8');
 
@@ -37,17 +41,17 @@ export const EmailOtpSend = async (email: string) => {
 
 const inlinedHtml = juice(`<style>${cssContent}</style>${replacedHtmlContent}`);
 
-
+console.log('await sengiMail...............')
     const info = await transporter.sendMail({
         from: {
             name: 'DevColab',
-            address: 'mshahinshamsb79@gmail.com'
+            address: 'DevCollab@gmail.com'
         },
       to: email,
       subject: 'Verify Your Email',
       text: 'Email Verify ',
       html: inlinedHtml,
-    });
+    }); 
 
 
 
