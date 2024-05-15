@@ -19,28 +19,24 @@ const fs_1 = __importDefault(require("fs"));
 const juice_1 = __importDefault(require("juice"));
 console.log(process.env.MAILER_PASS);
 const transporter = nodemailer_1.default.createTransport({
-    service: "gmail",
+    service: "Gmail",
     auth: {
         user: 'shahinshamsb79@gmail.com',
-        pass: 'heoh xhrs hvfu hcnh'
-    },
-    from: 'DevCollab <DevCollab@gmail.com>'
-});
-// hdns eqgz mmxd djga
+        pass: 'szcj xeec grer gcfp'
+    }
+}, { from: 'DevColab' });
 const EmailOtpSend = (email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('sending email ................. ');
         const htmlContent = fs_1.default.readFileSync(path_1.default.resolve(__dirname, './EmailOtp.html'), 'utf8');
         const cssContent = fs_1.default.readFileSync(path_1.default.resolve(__dirname, './stylesheet.css'), 'utf8');
         const verificationToken = process.env.EMAIL_VERIFICATION_CODE;
         const verificationLink = `${process.env.BASE_URL_ORIGIN}/VerifyEmail`;
         const replacedHtmlContent = htmlContent.replace('${verificationLink}', verificationLink);
         const inlinedHtml = (0, juice_1.default)(`<style>${cssContent}</style>${replacedHtmlContent}`);
-        console.log('await sengiMail...............');
         const info = yield transporter.sendMail({
             from: {
                 name: 'DevColab',
-                address: 'DevCollab@gmail.com'
+                address: 'mshahinshamsb79@gmail.com'
             },
             to: email,
             subject: 'Verify Your Email',
