@@ -31,7 +31,7 @@ export const EmailOtpSend = async (email: string) => {
 
    const verificationToken=process.env.EMAIL_VERIFICATION_CODE
 
-    const verificationLink = `http://localhost:5173/VerifyEmail`;
+    const verificationLink = `${process.env.BASE_URL_ORIGIN}/VerifyEmail`;
 
     const replacedHtmlContent = htmlContent.replace('${verificationLink}', verificationLink);
 
