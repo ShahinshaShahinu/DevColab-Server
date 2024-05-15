@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteHashtag = exports.DeleteVideo = exports.UserSavedPosts = exports.EditComment = exports.AddCommentOnPost = exports.Postslike = exports.EditUSerPost = exports.HomePosts = exports.DaleteSavedPost = exports.FindUserSavedPosts = exports.DeletingPost = exports.SavingPosts = exports.GetUserPost = exports.AddPost = void 0;
+exports.DeleteHashtag = exports.DeleteVideo = exports.UserSavedPosts = exports.EditComment = exports.AddCommentOnPost = exports.Postslike = exports.EditUSerPost = exports.SearchPosts = exports.HomePosts = exports.DaleteSavedPost = exports.FindUserSavedPosts = exports.DeletingPost = exports.SavingPosts = exports.GetUserPost = exports.AddPost = void 0;
 const Posts_1 = require("../../app/Posts/Posts");
 const UpdatePosts_1 = require("../../app/Posts/UpdatePosts");
 const SavePost_1 = require("../../app/SavingPost/SavePost");
@@ -130,6 +130,17 @@ const HomePosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.HomePosts = HomePosts;
+const SearchPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const HomePosts = yield (0, UpdatePosts_1.GetSearchPosts)(postRepository)();
+        if (HomePosts)
+            res.json(HomePosts);
+    }
+    catch (error) {
+        console.log(error, 'HomePosts');
+    }
+});
+exports.SearchPosts = SearchPosts;
 const EditUSerPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _c;
     try {

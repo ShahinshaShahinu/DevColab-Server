@@ -69,6 +69,25 @@ const PostRepositoryImpl = (PostModel) => {
             throw error;
         }
     });
+    const findSearchedPost = () => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const posts = yield PostModel.find({ status: true }).populate('userId').populate({
+                path: 'likes.LikedUsers.userId',
+                model: userModel_1.userModel
+            }).populate({
+                path: 'Comments',
+                options: { sort: { _id: -1 } },
+                populate: {
+                    path: 'userId',
+                    model: userModel_1.userModel
+                }
+            });
+            return posts;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
     const UpdatePost = (PostId, title, content, image, HashTag, uploadedVideoUrls) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const objectIdPostId = new mongodb_1.ObjectId(PostId);
@@ -197,6 +216,7 @@ const PostRepositoryImpl = (PostModel) => {
         create,
         findPosts,
         find,
+        findSearchedPost,
         DeletePost,
         UpdatePost,
         UpdatePostLike,

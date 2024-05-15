@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon ./index.ts",
     "start": "ts-node index.ts",
-    "build": "tsc -outDir dist"
+    "build": "gulp"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +42,10 @@
     "@types/nodemailer": "^6.4.9",
     "@types/socket.io": "^3.0.2",
     "@types/ws": "^8.5.5",
+    "copyfiles": "^2.4.1",
+    "gulp": "^5.0.0",
+    "gulp-copy": "^4.0.1",
+    "gulp-typescript": "^6.0.0-alpha.1",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"

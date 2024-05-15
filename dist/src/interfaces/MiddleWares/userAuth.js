@@ -8,10 +8,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userAuth = (req, res, next) => {
     try {
         const token = req.headers.accesstoken;
-        console.log(token, 'tokentokentokentokentoken');
+        // console.log(token, 'tokentokentokentokentoken');
         if (token) {
             const accKey = process.env.JWT_ACTOKEN;
-            console.log('accKey:', accKey);
+            // console.log('accKey:', accKey);
             const decoded = jsonwebtoken_1.default.verify(token, accKey, { algorithms: ['HS256'] });
             // console.log('Decoded Token:User', decoded);
             if (decoded.exp) {

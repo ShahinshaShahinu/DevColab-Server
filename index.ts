@@ -20,46 +20,12 @@ import { userAuth } from "./src/interfaces/MiddleWares/userAuth";
 const app = express(); 
 dotenv.config();
 
-
+app.use("/utils", express.static(__dirname + "/utils"));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 
 db();
-
-// const expirationTime = new Date(Date.now() + 60000);
-// app.use(session({ secret: "Key", cookie: { expires: expirationTime } }))
-
-// Create a new instance of MongoDBStore
-// const store = new (MongoDBStore(session))({
-//   uri: 'mongodb+srv://muhammedshahinsha2442:shahinu123@cluster0.zwxzxre.mongodb.net/DevColab', // replace with your MongoDB URI
-//   collection: 'Posts',
-// });
-
-// store.on('error', function (error: any) {
-//   console.error('Session store error:', error);
-// });
-
-// app.use(
-//   session({
-//     secret: 'Key', // replace with a strong secret
-//     resave: false,
-//     saveUninitialized: true,
-//     store: store, 
-//   })
-// );
-
-
-// declare module 'express-session' {
-//   interface SessionData {
-//     serverSeacretToken?: string;
-
-//   }
-// }
-
-
-
-
 
 const port = 3000;
 

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeletePosthashtags = exports.PostVideoDelete = exports.FindPostView = exports.UpdateComments = exports.UpdateLike = exports.UpdateUserPost = exports.GetHomePosts = exports.DeleteUserPost = exports.getPostinfo = void 0;
+exports.DeletePosthashtags = exports.PostVideoDelete = exports.FindPostView = exports.UpdateComments = exports.UpdateLike = exports.UpdateUserPost = exports.GetSearchPosts = exports.GetHomePosts = exports.DeleteUserPost = exports.getPostinfo = void 0;
 const getPostinfo = (postRepository) => (userId) => __awaiter(void 0, void 0, void 0, function* () {
     const PostInfo = postRepository.findPosts(userId);
     return PostInfo;
@@ -26,6 +26,11 @@ const GetHomePosts = (postRepository) => (PageNumber, pageSize) => __awaiter(voi
     return posts;
 });
 exports.GetHomePosts = GetHomePosts;
+const GetSearchPosts = (postRepository) => () => __awaiter(void 0, void 0, void 0, function* () {
+    const posts = yield postRepository.findSearchedPost();
+    return posts;
+});
+exports.GetSearchPosts = GetSearchPosts;
 const UpdateUserPost = (postRepository) => (PostId, title, content, image, HashTag, uploadedVideoUrls) => __awaiter(void 0, void 0, void 0, function* () {
     const updated = yield postRepository.UpdatePost(PostId, title, content, image, HashTag, uploadedVideoUrls);
     return updated;

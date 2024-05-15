@@ -9,6 +9,7 @@ const router = (0, express_1.Router)();
 router.get('/profile/:userId', userAuth_1.userAuth, userController_1.GetUserProfile);
 router.get('/SavedPosts/:userId', PostsController_1.FindUserSavedPosts);
 router.get('/HomePosts', PostsController_1.HomePosts);
+router.get('/SearchPosts', PostsController_1.SearchPosts);
 router.get('/UserSaveds', userAuth_1.userAuth, PostsController_1.UserSavedPosts);
 router.get('/GetUsers', userController_1.GetUsers);
 router.get('/UserPostsView/:postId', userController_1.PostsView);
